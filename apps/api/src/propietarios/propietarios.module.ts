@@ -12,5 +12,6 @@ import { PropietariosController } from './infraestructura/propietarios.controlle
     PropietariosServicio,
     { provide: 'PropietarioRepositorio', useClass: PropietarioTypeOrmRepositorio },
   ],
+  exports: ['PropietarioRepositorio'],
 })
 export class PropietariosModule {}
