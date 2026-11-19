@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Not } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { OwnerData } from '../domain/owner';
 import { OwnerRepository } from '../domain/owner.repository';
 import { OwnerOrm } from './owner.orm-entity';
@@ -10,8 +10,7 @@ export class OwnerTypeOrmRepository implements OwnerRepository {
   constructor(@InjectRepository(OwnerOrm) private readonly repository: Repository<OwnerOrm>) {}
 
   async save(data: OwnerData): Promise<OwnerData> {
-    const entidad = this.repository.create(data);
-    return this.repository.save(entidad);
+    return this.repository.save(this.repository.create(data));
   }
 
   async findById(id: string): Promise<OwnerData | null> {
@@ -23,8 +22,8 @@ export class OwnerTypeOrmRepository implements OwnerRepository {
   }
 
   async delete(id: string): Promise<boolean> {
-    const resultado = await this.repository.delete(id);
-    return (resultado.affected ?? 0) > 0;
+    const result = await this.repository.delete(id);
+    return (result.affected ?? 0) > 0;
   }
 
   async existsByDocumentNumber(documentNumber: string, excludedId?: string): Promise<boolean> {

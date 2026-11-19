@@ -1,9 +1,9 @@
-import { Body, Controleler, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
 import { AuthenticationService } from '../application/authentication.service';
+import { AuthenticatedUser } from '../domain/user';
 import { CurrentUser } from './current-user.decorator';
 import { Public } from './public.decorator';
-import { AuthenticatedUser } from '../domain/user';
 
 class RegisterUserDto {
   @IsString()
@@ -32,8 +32,8 @@ class LoginDto {
   password!: string;
 }
 
-@Controleler('auth')
-export class AuthenticationControleler {
+@Controller('auth')
+export class AuthenticationController {
   constructor(private readonly service: AuthenticationService) {}
 
   @Post('register')

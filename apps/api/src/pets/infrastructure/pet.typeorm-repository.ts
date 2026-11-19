@@ -26,7 +26,7 @@ export class PetTypeOrmRepository implements PetRepository {
   }
 
   async delete(id: string): Promise<boolean> {
-    const resultado = await this.repository.delete(id);
-    return (resultado.affected ?? 0) > 0;
+    const result = await this.repository.delete(id);
+    return (result.affected ?? 0) > 0;
   }
 }

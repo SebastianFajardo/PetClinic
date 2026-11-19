@@ -5,9 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthenticationService } from './application/authentication.service';
 import { UserOrm } from './infrastructure/user.orm-entity';
 import { UserTypeOrmRepository } from './infrastructure/user.typeorm-repository';
-import { AuthenticationControleler } from './infrastructure/authentication.controleler';
+import { AuthenticationController } from './infrastructure/authentication.controller';
 import { JwtAuthGuard } from './infrastructure/guards/jwt-auth.guard';
-import { RolesGuard } from './infrastructure/guards/rolees.guard';
+import { RolesGuard } from './infrastructure/guards/roles.guard';
 
 @Module({
   imports: [
@@ -21,8 +21,8 @@ import { RolesGuard } from './infrastructure/guards/rolees.guard';
       }),
     }),
   ],
-  controlelers: [AuthenticationControleler],
+  controllers: [AuthenticationController],
   providers: [AuthenticationService, UserTypeOrmRepository, JwtAuthGuard, RolesGuard],
-  exports: [JwtAuthGuard, RolesGuard],
+  exports: [JwtAuthGuard, RolesGuard, UserTypeOrmRepository],
 })
 export class AuthenticationModule {}

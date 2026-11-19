@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, Index, PrimaryColumn, UpdateDateColumn } from 'typeorm';
-import { RolUser } from '../domain/user';
+import { UserRole } from '../domain/user';
 
 @Entity({ name: 'users' })
 @Index('UQ_users_email', ['email'], { unique: true })
@@ -14,10 +14,10 @@ export class UserOrm {
   email!: string;
 
   @Column({ name: 'password_hash', type: 'varchar', length: 255, select: false })
-  contrasenaHash!: string;
+  passwordHash!: string;
 
   @Column({ name: 'role', type: 'varchar', length: 30 })
-  role!: RolUser;
+  role!: UserRole;
 
   @Column({ name: 'is_active', type: 'boolean', default: true })
   isActive!: boolean;

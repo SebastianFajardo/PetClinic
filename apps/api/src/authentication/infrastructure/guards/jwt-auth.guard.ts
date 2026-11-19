@@ -5,7 +5,7 @@ import { Request } from 'express';
 import { AuthenticatedUser } from '../../domain/user';
 import { PUBLIC_ROUTE } from '../public.decorator';
 
-interface SolicitudAutenticada extends Request {
+interface AuthenticatedRequest extends Request {
   user?: AuthenticatedUser;
 }
 
@@ -14,28 +14,28 @@ export class JwtAuthGuard implements CanActivate {
   constructor(private readonly jwt: JwtService, private readonly reflector: Reflector) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const esPublic = this.reflector.getAllAndOverride<boolean>(PUBLIC_ROUTE, [
+    const isPublic = this.reflector.getAllAndOverride<boolean>(PUBLIC_ROUTE, [
       context.getHandler(),
       context.getClass(),
     ]);
-    if (esPublic) return true;
+    if (isPublic) return true;
 
-    const request = context.switchToHttp().getRequest<SolicitudAutenticada>();
-    const encabezado = request.headers.authorization;
-    if (!encabezado?.startsWith('Bearer ')) {
-      throw new UnauthorizedException('Se requiere autenticación');
+    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
+    const authorization = request.headers.authorization;
+    if (!authorization?.startsWith('Bearer ')) {
+      throw new UnauthorizedException('Authentication is required');
     }
     try {
-      const carga = await this.jwt.verifyAsync<{
+      const payload = await this.jwt.verifyAsync<{
         sub: string;
         email: string;
         name: string;
-        rolee: AuthenticatedUser['rolee'];
-      }>(encabezado.slice(7));
-      request.user = { id: carga.sub, email: carga.email, name: carga.name, rolee: carga.rolee };
+        role: AuthenticatedUser['role'];
+      }>(authorization.slice(7));
+      request.user = { id: payload.sub, email: payload.email, name: payload.name, role: payload.role };
       return true;
     } catch {
-      throw new UnauthorizedException('La sesión no es válida o ha expirado');
+      throw new UnauthorizedException('The session is invalid or has expired');
     }
   }
 }

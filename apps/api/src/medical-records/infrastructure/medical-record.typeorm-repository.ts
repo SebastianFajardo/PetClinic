@@ -21,7 +21,7 @@ export class MedicalRecordTypeOrmRepository implements MedicalRecordRepository {
     return this.repository.find({ order: { recordedAt: 'DESC' } });
   }
 
-  async listarPorPet(petId: string): Promise<MedicalRecordData[]> {
+  async listByPet(petId: string): Promise<MedicalRecordData[]> {
     return this.repository.find({ where: { petId }, order: { recordedAt: 'DESC' } });
   }
 }

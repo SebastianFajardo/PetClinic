@@ -1,11 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
-import { Publica } from '../../authentication/infrastructure/public.decorator';
+import { Public } from '../../authentication/infrastructure/public.decorator';
 
 @Controller('health')
 export class HealthController {
   @Get()
-  @Publica()
-  consultar(): { status: string; service: string } {
+  @Public()
+  check(): { status: string; service: string } {
     return { status: 'ok', service: 'petclinic-api' };
   }
 }

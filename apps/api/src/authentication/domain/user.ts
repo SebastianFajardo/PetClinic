@@ -5,7 +5,7 @@ export interface UserData {
   name: string;
   email: string;
   passwordHash: string;
-  rolee: UserRole;
+  role: UserRole;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -15,9 +15,9 @@ export interface AuthenticatedUser {
   id: string;
   name: string;
   email: string;
-  rolee: UserRole;
+  role: UserRole;
 }
 
 export function toAuthenticatedUser(data: UserData): AuthenticatedUser {
-  return { id: data.id, name: data.name, email: data.email, rolee: data.rolee };
+  return { id: data.id, name: data.name, email: data.email, role: data.role };
 }
