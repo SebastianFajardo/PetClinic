@@ -55,10 +55,16 @@ export const api = {
   owners: {
     list: () => request<Owner[]>('/owners'),
     create: (input: OwnerInput) => request<Owner>('/owners', { method: 'POST', body: JSON.stringify(input) }),
+    update: (id: string, input: Partial<OwnerInput>) =>
+      request<Owner>(`/owners/${id}`, { method: 'PATCH', body: JSON.stringify(input) }),
+    delete: (id: string) => request<void>(`/owners/${id}`, { method: 'DELETE' }),
   },
   pets: {
     list: () => request<Pet[]>('/pets'),
     create: (input: PetInput) => request<Pet>('/pets', { method: 'POST', body: JSON.stringify(input) }),
+    update: (id: string, input: Partial<PetInput>) =>
+      request<Pet>(`/pets/${id}`, { method: 'PATCH', body: JSON.stringify(input) }),
+    delete: (id: string) => request<void>(`/pets/${id}`, { method: 'DELETE' }),
   },
   appointments: {
     list: () => request<Appointment[]>('/appointments'),
