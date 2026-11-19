@@ -13,7 +13,20 @@ export class InventoryTypeOrmRepository implements InventoryRepository {
   ) {}
 
   async createItem(data: InventoryItemData): Promise<InventoryItemData> {
-    return this.toItem(await this.items.save(this.items.create(data)));
+    const entity = this.items.create({
+      id: data.id,
+      name: data.name,
+      description: data.description,
+      category: data.category,
+      unit: data.unit,
+      quantity: data.quantity.toFixed(2),
+      minimumQuantity: data.minimumQuantity.toFixed(2),
+      isActive: data.isActive,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
+    });
+    const saved = await this.items.save(entity);
+    return this.toItem(saved);
   }
   async listItems(): Promise<InventoryItemData[]> {
     return (await this.items.find({ where: { isActive: true }, order: { name: 'ASC' } })).map(item => this.toItem(item));
@@ -42,11 +55,18 @@ export class InventoryTypeOrmRepository implements InventoryRepository {
       if (input.type === 'adjustment') newQuantity = input.quantity;
       item.quantity = newQuantity.toFixed(2);
       await itemRepository.save(item);
-      const movement = await movementRepository.save(movementRepository.create({
-        id: input.id, itemId: input.itemId, type: input.type, quantity: input.quantity,
-        previousQuantity, newQuantity, reason: input.reason, createdAt: input.createdAt,
-      }));
-      return this.toMovement(movement);
+      const movementEntity = movementRepository.create({
+        id: input.id,
+        itemId: input.itemId,
+        type: input.type,
+        quantity: input.quantity.toFixed(2),
+        previousQuantity: previousQuantity.toFixed(2),
+        newQuantity: newQuantity.toFixed(2),
+        reason: input.reason,
+        createdAt: input.createdAt,
+      });
+      const savedMovement = await movementRepository.save(movementEntity);
+      return this.toMovement(savedMovement);
     });
   }
   private toItem(item: InventoryItemOrm): InventoryItemData {
