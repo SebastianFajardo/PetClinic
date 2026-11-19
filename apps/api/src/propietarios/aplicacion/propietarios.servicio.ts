@@ -17,14 +17,16 @@ export class PropietariosServicio {
   constructor(@Inject('PropietarioRepositorio') private readonly repositorio: PropietarioRepositorio) {}
 
   async crear(entrada: CrearPropietario): Promise<DatosPropietario> {
-    await this.validarUnicidad(entrada.documento, entrada.correo);
+    const documento = entrada.documento.trim();
+    const correo = entrada.correo.trim().toLowerCase();
+    await this.validarUnicidad(documento, correo);
     const ahora = new Date();
     const propietario = Propietario.crear({
       id: randomUUID(),
       nombre: entrada.nombre.trim(),
       apellido: entrada.apellido.trim(),
-      documento: entrada.documento.trim(),
-      correo: entrada.correo.trim().toLowerCase(),
+      documento,
+      correo,
       telefono: entrada.telefono.trim(),
       direccion: entrada.direccion?.trim() || null,
       creadoEn: ahora,
