@@ -1,9 +1,9 @@
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
-import { IsDateString, IsIn, IsNumber, IsOptional, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
+import { IsDateString, IsIn, IsNumber, IsOptional, IsString, IsUUID, Max, MaxLength, Min, MinLength } from 'class-validator';
 import { CrearMascota, MascotasServicio } from '../aplicacion/mascotas.servicio';
 
 class CrearMascotaDto implements CrearMascota {
-  @IsString()
+  @IsUUID()
   propietarioId!: string;
 
   @IsString()
@@ -46,7 +46,7 @@ class CrearMascotaDto implements CrearMascota {
 
 class ActualizarMascotaDto {
   @IsOptional()
-  @IsString()
+  @IsUUID()
   propietarioId?: string;
 
   @IsOptional()
