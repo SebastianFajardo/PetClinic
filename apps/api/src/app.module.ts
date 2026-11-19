@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EstadoController } from './estado/infraestructura/estado.controller';
+import { MascotasModule } from './mascotas/mascotas.module';
+import { PropietariosModule } from './propietarios/propietarios.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { EstadoController } from './estado/infraestructura/estado.controller';
         synchronize: false,
       }),
     }),
+    PropietariosModule,
+    MascotasModule,
   ],
   controllers: [EstadoController],
 })
