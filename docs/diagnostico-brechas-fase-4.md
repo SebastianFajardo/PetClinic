@@ -23,8 +23,8 @@ La guía también solicita revisar los requisitos de la actividad, participar en
 - Visibilidad observada: privado.
 - Rama predeterminada: `main`.
 - Rama de trabajo disponible: `develop/petclinic-cloud`.
-- En la comparación consultada, `develop/petclinic-cloud` está 3 commits adelante y 1 detrás de `main`. Las ramas están divergidas; no se realizó merge ni se modificó `main`.
-- Último commit observado en la rama de trabajo: `d5d06499258e5391b2f8664269ab4ad49e9f0d50`.
+- Al iniciar esta revisión, `develop/petclinic-cloud` estaba 3 commits adelante y 1 detrás de `main`. Después de añadir este diagnóstico, quedó 4 commits adelante y 1 detrás. Las ramas siguen divergidas; no se realizó merge ni se modificó `main`.
+- Commit de partida observado antes de este diagnóstico: `d5d06499258e5391b2f8664269ab4ad49e9f0d50`. Commit que registra este diagnóstico: `ebdb0bad9b0205a5eaf15310e5663a4cad53a7b9`.
 - El árbol contiene backend NestJS, frontend React/Vite, configuración de PostgreSQL con TypeORM, migraciones y módulos de autenticación, propietarios, mascotas, historias clínicas, citas, tratamientos e inventario.
 - La interfaz de informes está presente en el frontend. En el árbol revisado no aparece un módulo backend independiente llamado `reports`; debe verificarse que los indicadores se alimenten correctamente de los servicios existentes.
 - Hay pruebas Jest de dominio en varios módulos del backend.
