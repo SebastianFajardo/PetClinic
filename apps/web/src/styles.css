@@ -117,3 +117,16 @@ td strong { color: #29475a; font-weight: 600; }
 .success-banner { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; padding: 13px 16px; border-radius: 9px; background: #eaf6ef; color: #28785e; font-size: 12px; }
 .inventory-current-stock { margin: 0; color: #657986; font-size: 12px; }
 @media (max-width: 650px) { .inventory-summary { grid-template-columns: 1fr; } .inventory-actions { width: 100%; } }
+
+.reports-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 18px 0 22px; }
+.reports-grid .stat-card { min-height: 125px; }
+.reports-grid .stat-card strong { font-size: 28px; }
+.reports-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.report-card { margin-top: 18px; }
+.reports-columns .report-card { margin-top: 0; }
+.report-list { display: grid; gap: 0; }
+.report-row { display: flex; justify-content: space-between; align-items: center; padding: 13px 4px; border-bottom: 1px solid #edf1f3; color: #657986; font-size: 13px; }
+.report-row strong { color: #29475a; font-family: Manrope, sans-serif; font-size: 16px; }
+.report-disclaimer { margin: 16px 2px; color: #81919d; font-size: 11px; }
+@media (max-width: 900px) { .reports-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .reports-columns { grid-template-columns: 1fr; } }
+@media (max-width: 650px) { .reports-grid { grid-template-columns: 1fr; } }
