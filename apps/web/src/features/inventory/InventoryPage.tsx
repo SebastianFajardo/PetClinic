@@ -84,7 +84,7 @@ export function InventoryPage() {
     {showMovementForm && <form className="data-form" onSubmit={registerMovement}>
       <label>Producto<select name="itemId" required value={selectedItemId} onChange={event => setSelectedItemId(event.target.value)}><option value="">Selecciona un producto</option>{items.map(item => <option key={item.id} value={item.id}>{item.name} · {quantityLabel(item.quantity, item.unit)}</option>)}</select></label>
       <label>Tipo<select value={movementType} onChange={event => setMovementType(event.target.value as InventoryMovementType)}><option value="entry">Entrada</option><option value="exit">Salida</option><option value="adjustment">Ajuste</option></select></label>
-      <label>{movementType === 'adjustment' ? 'Existencia final contada' : 'Cantidad'}<input name="quantity" type="number" min="0.01" step="0.01" required /></label>
+      <label>{movementType === 'adjustment' ? 'Existencia final contada' : 'Cantidad'}<input name="quantity" type="number" min={movementType === 'adjustment' ? 0 : 0.01} step="0.01" required /></label>
       <label>Motivo<input name="reason" required minLength={3} maxLength={500} placeholder="Compra, uso clínico, vencimiento..." /></label>
       {selectedItem && <p className="full-field inventory-current-stock">Existencia actual: <strong>{quantityLabel(selectedItem.quantity, selectedItem.unit)}</strong></p>}
       {movementType === 'adjustment' && <p className="full-field inventory-current-stock">El ajuste reemplaza la existencia actual por la cantidad contada.</p>}
