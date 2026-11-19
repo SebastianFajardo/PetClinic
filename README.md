@@ -16,13 +16,18 @@ Plataforma web académica para apoyar la gestión clínica, administrativa y log
 apps/
   api/
     src/
+      citas/
       compartido/
       estado/
-      propietarios/
+      historias-clinicas/
       mascotas/
+      propietarios/
       database/
   web/
     src/
+      features/
+        appointments/
+        medical-records/
 ```
 
 ## Requirements
@@ -46,7 +51,7 @@ apps/
    docker compose up -d database
    ```
 
-4. Run the database migration from the repository root:
+4. Run database migrations:
 
    ```bash
    npm run migration:run --workspace @petclinic/api
@@ -66,7 +71,7 @@ apps/
 
 The web application uses `http://localhost:3000/api/v1` by default. Configure `VITE_API_URL` when the API runs at another address.
 
-## Implemented API endpoints
+## API endpoints
 
 Base URL: `/api/v1`
 
@@ -91,8 +96,25 @@ Base URL: `/api/v1`
 - `PATCH /pets/:id`
 - `DELETE /pets/:id`
 
+### Medical records
+
+- `POST /medical-records`
+- `GET /medical-records`
+- `GET /medical-records?petId=:petId`
+- `GET /medical-records/:id`
+
+### Appointments
+
+- `POST /appointments`
+- `GET /appointments`
+- `GET /appointments?from=:date&to=:date`
+- `GET /appointments/:id`
+- `PATCH /appointments/:id/status`
+
+Appointment states are `scheduled`, `confirmed`, `completed`, `cancelled` and `no_show`. The API validates state transitions and prevents overlapping active appointments for the same pet.
+
 ## Current scope
 
-The current increment includes the initial application foundation, owner and pet management, PostgreSQL mappings, the first database migration, a basic web interface, domain unit tests and a GitHub Actions validation workflow.
+The current increment includes owner and pet management, clinical records, appointment scheduling, PostgreSQL mappings, database migrations, domain unit tests and initial web screens for the four management areas.
 
-Clinical records, appointments, treatments, inventory, reporting, authentication and authorization are not implemented yet. This repository is an academic prototype in progress and has not been validated as a production or TRL5 system.
+Authentication and authorization, treatments as a separate module, inventory, reporting and reminders are not implemented yet. The project is an academic prototype in progress. It has not been validated as a production or TRL5 system.
