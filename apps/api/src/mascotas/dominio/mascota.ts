@@ -1,3 +1,5 @@
+import { ReglaNegocioError } from '../../compartido/dominio/regla-negocio.error';
+
 export type EspecieMascota = 'dog' | 'cat' | 'bird' | 'other';
 export type SexoMascota = 'male' | 'female' | 'unknown';
 
@@ -20,10 +22,10 @@ export class Mascota {
   private constructor(private readonly datos: DatosMascota) {}
 
   static crear(datos: DatosMascota): Mascota {
-    if (!datos.nombre.trim()) throw new Error('El nombre de la mascota es obligatorio');
-    if (!datos.propietarioId.trim()) throw new Error('El propietario es obligatorio');
+    if (!datos.nombre.trim()) throw new ReglaNegocioError('El nombre de la mascota es obligatorio');
+    if (!datos.propietarioId.trim()) throw new ReglaNegocioError('El propietario es obligatorio');
     if (datos.pesoKg !== null && (!Number.isFinite(datos.pesoKg) || datos.pesoKg <= 0)) {
-      throw new Error('El peso debe ser un número mayor que cero');
+      throw new ReglaNegocioError('El peso debe ser un número mayor que cero');
     }
     return new Mascota(datos);
   }
