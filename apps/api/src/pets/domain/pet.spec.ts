@@ -1,7 +1,7 @@
 import { Pet } from './pet';
 
 describe('Pet', () => {
-  const datos = {
+  const data = {
     id: 'a66bdfad-0b10-4b4c-8d61-8c9acddab2c1',
     ownerId: 'b66bdfad-0b10-4b4c-8d61-8c9acddab2c1',
     name: 'Luna',
@@ -17,10 +17,10 @@ describe('Pet', () => {
   };
 
   it('creates a pet with valid data', () => {
-    expect(Pet.create(datos).toData()).toEqual(datos);
+    expect(Pet.create(data).toData()).toEqual(data);
   });
 
   it('rejects a non-positive weight', () => {
-    expect(() => Pet.create({ ...datos, weightKg: 0 })).toThrow('El weight debe ser un número mayor que cero');
+    expect(() => Pet.create({ ...data, weightKg: 0 })).toThrow('El weight debe ser un número mayor que cero');
   });
 });

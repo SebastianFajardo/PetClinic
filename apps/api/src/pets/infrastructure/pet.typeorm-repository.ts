@@ -9,8 +9,8 @@ import { PetOrm } from './pet.orm-entity';
 export class PetTypeOrmRepository implements PetRepository {
   constructor(@InjectRepository(PetOrm) private readonly repository: Repository<PetOrm>) {}
 
-  async save(datos: PetData): Promise<PetData> {
-    return this.repository.save(this.repository.create(datos));
+  async save(data: PetData): Promise<PetData> {
+    return this.repository.save(this.repository.create(data));
   }
 
   async findById(id: string): Promise<PetData | null> {
@@ -21,7 +21,7 @@ export class PetTypeOrmRepository implements PetRepository {
     return this.repository.find({ order: { createdAt: 'DESC' } });
   }
 
-  async listarPorOwner(ownerId: string): Promise<PetData[]> {
+  async listByOwner(ownerId: string): Promise<PetData[]> {
     return this.repository.find({ where: { ownerId }, order: { createdAt: 'DESC' } });
   }
 

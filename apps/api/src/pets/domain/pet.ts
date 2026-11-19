@@ -19,18 +19,18 @@ export interface PetData {
 }
 
 export class Pet {
-  private constructor(private readonly datos: PetData) {}
+  private constructor(private readonly data: PetData) {}
 
-  static create(datos: PetData): Pet {
-    if (!datos.name.trim()) throw new ReglaNegocioError('El name de la pet es obligatorio');
-    if (!datos.ownerId.trim()) throw new ReglaNegocioError('El owner es obligatorio');
-    if (datos.weightKg !== null && (!Number.isFinite(datos.weightKg) || datos.weightKg <= 0)) {
+  static create(data: PetData): Pet {
+    if (!data.name.trim()) throw new ReglaNegocioError('El name de la pet es obligatorio');
+    if (!data.ownerId.trim()) throw new ReglaNegocioError('El owner es obligatorio');
+    if (data.weightKg !== null && (!Number.isFinite(data.weightKg) || data.weightKg <= 0)) {
       throw new ReglaNegocioError('El weight debe ser un número mayor que cero');
     }
-    return new Pet(datos);
+    return new Pet(data);
   }
 
   toData(): PetData {
-    return { ...this.datos };
+    return { ...this.data };
   }
 }
