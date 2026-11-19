@@ -3,7 +3,6 @@ import { AppointmentsPage } from './features/appointments/AppointmentsPage';
 import { MedicalRecordsPage } from './features/medical-records/MedicalRecordsPage';
 import { TreatmentsPage } from './features/treatments/TreatmentsPage';
 import { InventoryPage } from './features/inventory/InventoryPage';
-import { InventoryPage } from './features/inventory/InventoryPage';
 import type { Owner, Pet } from './types';
 import { AuthPage } from './features/auth/AuthPage';
 import { api, sessionStorage, type AuthSession, type AuthUser } from './services/api';
@@ -124,9 +123,6 @@ function Dashboard({ user, onLogout }: { user: AuthUser; onLogout: () => void })
           {['admin', 'veterinarian', 'assistant'].includes(user.role) && <button className={section === 'inventory' ? 'nav-item active' : 'nav-item'} onClick={() => setSection('inventory')}>
             <span>▤</span> Inventario
           </button>}
-          {['admin', 'veterinarian', 'assistant'].includes(user.role) && <button className={section === 'inventory' ? 'nav-item active' : 'nav-item'} onClick={() => setSection('inventory')}>
-            <span>▤</span> Inventario
-          </button>}
         </nav>
         <div className="sidebar-footer">
           <span className={apiConnected ? 'connection-dot online' : 'connection-dot'} />
@@ -198,8 +194,6 @@ function Dashboard({ user, onLogout }: { user: AuthUser; onLogout: () => void })
         {requestState === 'ready' && section === 'medical-records' && ['admin', 'veterinarian'].includes(user.role) && <MedicalRecordsPage pets={pets} />}
 
         {requestState === 'ready' && section === 'treatments' && ['admin', 'veterinarian', 'assistant'].includes(user.role) && <TreatmentsPage pets={pets} />}
-
-        {requestState === 'ready' && section === 'inventory' && ['admin', 'veterinarian', 'assistant'].includes(user.role) && <InventoryPage />}
 
         {requestState === 'ready' && section === 'inventory' && ['admin', 'veterinarian', 'assistant'].includes(user.role) && <InventoryPage />}
 
