@@ -1,4 +1,4 @@
-import type { Appointment, AppointmentInput, AppointmentStatus, MedicalRecord, MedicalRecordInput, Owner, OwnerInput, Pet, PetInput, Treatment, TreatmentControl, TreatmentControlInput, TreatmentInput, TreatmentStatus } from '../types';
+import type { Appointment, AppointmentInput, AppointmentStatus, MedicalRecord, MedicalRecordInput, Owner, OwnerInput, Pet, PetInput, Treatment, TreatmentControl, TreatmentControlInput, TreatmentInput, TreatmentStatus, InventoryItem, InventoryItemInput, InventoryMovement, InventoryMovementInput } from '../types';
 
 const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api/v1';
 const tokenKey = 'petclinic_access_token';
@@ -70,6 +70,12 @@ export const api = {
     list: () => request<MedicalRecord[]>('/medical-records'),
     create: (input: MedicalRecordInput) =>
       request<MedicalRecord>('/medical-records', { method: 'POST', body: JSON.stringify(input) }),
+  },
+  inventory: {
+    listItems: () => request<InventoryItem[]>('/inventory/items'),
+    createItem: (input: InventoryItemInput) => request<InventoryItem>('/inventory/items', { method: 'POST', body: JSON.stringify(input) }),
+    listMovements: (itemId?: string) => request<InventoryMovement[]>(`/inventory/movements${itemId ? `?itemId=${encodeURIComponent(itemId)}` : ''}`),
+    registerMovement: (input: InventoryMovementInput) => request<InventoryMovement>('/inventory/movements', { method: 'POST', body: JSON.stringify(input) }),
   },
   treatments: {
     list: (petId?: string) => request<Treatment[]>(`/treatments${petId ? `?petId=${encodeURIComponent(petId)}` : ''}`),

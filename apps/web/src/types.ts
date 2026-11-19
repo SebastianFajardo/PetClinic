@@ -144,3 +144,19 @@ export interface TreatmentControlInput {
   outcome: string;
   nextControlAt?: string;
 }
+
+export type InventoryMovementType = 'entry' | 'exit' | 'adjustment';
+export interface InventoryItem {
+  id: string; name: string; description: string | null; category: string; unit: string;
+  quantity: number; minimumQuantity: number; isActive: boolean; createdAt: string; updatedAt: string;
+}
+export interface InventoryMovement {
+  id: string; itemId: string; type: InventoryMovementType; quantity: number;
+  previousQuantity: number; newQuantity: number; reason: string; createdAt: string;
+}
+export interface InventoryItemInput {
+  name: string; description?: string; category: string; unit: string; minimumQuantity?: number;
+}
+export interface InventoryMovementInput {
+  itemId: string; type: InventoryMovementType; quantity: number; reason: string;
+}
