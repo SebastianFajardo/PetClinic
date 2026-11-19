@@ -2,15 +2,15 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import { UsuarioAutenticado } from '../../dominio/usuario';
+import { UserAutenticado } from '../../domain/user';
 import { RUTA_PUBLICA } from '../publica.decorator';
 
 interface SolicitudAutenticada extends Request {
-  usuario?: UsuarioAutenticado;
+  user?: UserAutenticado;
 }
 
 @Injectable()
-export class AccesoJwtGuard implements CanActivate {
+export class JwtAuthGuard implements CanActivate {
   constructor(private readonly jwt: JwtService, private readonly reflector: Reflector) {}
 
   async canActivate(contexto: ExecutionContext): Promise<boolean> {
@@ -30,9 +30,9 @@ export class AccesoJwtGuard implements CanActivate {
         sub: string;
         email: string;
         name: string;
-        role: UsuarioAutenticado['rol'];
+        role: UserAutenticado['role'];
       }>(encabezado.slice(7));
-      solicitud.usuario = { id: carga.sub, correo: carga.email, nombre: carga.name, rol: carga.role };
+      solicitud.user = { id: carga.sub, email: carga.email, name: carga.name, role: carga.role };
       return true;
     } catch {
       throw new UnauthorizedException('La sesión no es válida o ha expirado');

@@ -3,11 +3,11 @@ import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { resolve } from 'node:path';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AutenticacionModule } from './autenticacion/autenticacion.module';
-import { AccesoJwtGuard } from './autenticacion/infraestructura/guards/acceso-jwt.guard';
-import { RolesGuard } from './autenticacion/infraestructura/guards/roles.guard';
+import { AuthenticationModule } from './authentication/authentication.module';
+import { JwtAuthGuard } from './authentication/infrastructure/guards/acceso-jwt.guard';
+import { RolesGuard } from './authentication/infrastructure/guards/roles.guard';
 import { CitasModule } from './citas/citas.module';
-import { EstadoController } from './estado/infraestructura/estado.controller';
+import { EstadoController } from './estado/infrastructure/estado.controller';
 import { HistoriasClinicasModule } from './historias-clinicas/historias-clinicas.module';
 import { MascotasModule } from './mascotas/mascotas.module';
 import { PropietariosModule } from './propietarios/propietarios.module';
@@ -24,18 +24,18 @@ import { PropietariosModule } from './propietarios/propietarios.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configuracion: ConfigService) => ({
+      useFactory: (configuration: ConfigService) => ({
         type: 'postgres' as const,
-        host: configuracion.get<string>('DATABASE_HOST', 'localhost'),
-        port: Number(configuracion.get<string>('DATABASE_PORT', '5432')),
-        username: configuracion.get<string>('DATABASE_USER', 'petclinic'),
-        password: configuracion.get<string>('DATABASE_PASSWORD', 'petclinic'),
-        database: configuracion.get<string>('DATABASE_NAME', 'petclinic'),
+        host: configuration.get<string>('DATABASE_HOST', 'localhost'),
+        port: Number(configuration.get<string>('DATABASE_PORT', '5432')),
+        username: configuration.get<string>('DATABASE_USER', 'petclinic'),
+        password: configuration.get<string>('DATABASE_PASSWORD', 'petclinic'),
+        database: configuration.get<string>('DATABASE_NAME', 'petclinic'),
         autoLoadEntities: true,
         synchronize: false,
       }),
     }),
-    AutenticacionModule,
+    AuthenticationModule,
     PropietariosModule,
     MascotasModule,
     HistoriasClinicasModule,
@@ -43,7 +43,7 @@ import { PropietariosModule } from './propietarios/propietarios.module';
   ],
   controllers: [EstadoController],
   providers: [
-    { provide: APP_GUARD, useExisting: AccesoJwtGuard },
+    { provide: APP_GUARD, useExisting: JwtAuthGuard },
     { provide: APP_GUARD, useExisting: RolesGuard },
   ],
 })
