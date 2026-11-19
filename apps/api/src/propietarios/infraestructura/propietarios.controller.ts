@@ -1,3 +1,4 @@
+import { Roles } from '../../autenticacion/infraestructura/roles.decorator';
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
 import { IsEmail, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 import { CrearPropietario, PropietariosServicio } from '../aplicacion/propietarios.servicio';
@@ -70,6 +71,7 @@ class ActualizarPropietarioDto {
 }
 
 @Controller('owners')
+@Roles('admin', 'veterinarian', 'assistant', 'receptionist')
 export class PropietariosController {
   constructor(private readonly servicio: PropietariosServicio) {}
 
