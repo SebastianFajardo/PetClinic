@@ -1,3 +1,4 @@
+import { Roles } from '../../autenticacion/infraestructura/roles.decorator';
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { IsDateString, IsIn, IsNumber, IsOptional, IsString, IsUUID, Max, MaxLength, Min, MinLength } from 'class-validator';
 import { CrearMascota, MascotasServicio } from '../aplicacion/mascotas.servicio';
@@ -90,6 +91,7 @@ class ActualizarMascotaDto {
 }
 
 @Controller('pets')
+@Roles('admin', 'veterinarian', 'assistant', 'receptionist')
 export class MascotasController {
   constructor(private readonly servicio: MascotasServicio) {}
 
