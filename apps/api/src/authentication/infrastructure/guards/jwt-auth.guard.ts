@@ -2,11 +2,11 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import { UserAutenticado } from '../../domain/user';
-import { RUTA_PUBLICA } from '../publica.decorator';
+import { AuthenticatedUser } from '../../domain/user';
+import { RUTA_PUBLICA } from '../public.decorator';
 
 interface SolicitudAutenticada extends Request {
-  user?: UserAutenticado;
+  user?: AuthenticatedUser;
 }
 
 @Injectable()
@@ -30,7 +30,7 @@ export class JwtAuthGuard implements CanActivate {
         sub: string;
         email: string;
         name: string;
-        role: UserAutenticado['role'];
+        role: AuthenticatedUser['role'];
       }>(encabezado.slice(7));
       solicitud.user = { id: carga.sub, email: carga.email, name: carga.name, role: carga.role };
       return true;

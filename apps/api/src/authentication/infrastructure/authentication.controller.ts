@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
-import { AuthenticationService } from '../application/authentication.servicio';
-import { CurrentUser } from './user-actual.decorator';
-import { Publica } from './publica.decorator';
+import { AuthenticationService } from '../application/authentication.service';
+import { CurrentUser } from './current-user.decorator';
+import { Publica } from './public.decorator';
 import { AuthenticatedUser } from '../domain/user';
 
 class RegisterUserDto {
@@ -34,18 +34,18 @@ class LoginDto {
 
 @Controller('auth')
 export class AuthenticationController {
-  constructor(private readonly servicio: AuthenticationService) {}
+  constructor(private readonly service: AuthenticationService) {}
 
   @Post('register')
   @Publica()
   register(@Body() input: RegisterUserDto) {
-    return this.servicio.register(input);
+    return this.service.register(input);
   }
 
   @Post('login')
   @Publica()
   login(@Body() input: LoginDto) {
-    return this.servicio.login(input.email, input.password);
+    return this.service.login(input.email, input.password);
   }
 
   @Get('me')

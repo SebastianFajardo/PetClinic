@@ -25,7 +25,7 @@ export class AuthenticationService {
       id: randomUUID(),
       name: input.name.trim(),
       email,
-      contrasenaHash: await hash(input.password, 12),
+      passwordHash: await hash(input.password, 12),
       role: 'assistant',
       isActive: true,
       createdAt: now,
@@ -36,7 +36,7 @@ export class AuthenticationService {
 
   async login(correoEntrada: string, password: string) {
     const user = await this.usuarios.findByEmail(correoEntrada.trim().toLowerCase());
-    if (!user || !user.isActive || !(await compare(password, user.contrasenaHash))) {
+    if (!user || !user.isActive || !(await compare(password, user.passwordHash))) {
       throw new UnauthorizedException('Credenciales no válidas');
     }
     return this.generarSesion(user);

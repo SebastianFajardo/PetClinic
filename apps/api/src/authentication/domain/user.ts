@@ -4,7 +4,7 @@ export interface DatosUser {
   id: string;
   name: string;
   email: string;
-  contrasenaHash: string;
+  passwordHash: string;
   role: RolUser;
   isActive: boolean;
   createdAt: Date;
