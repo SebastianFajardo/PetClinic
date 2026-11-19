@@ -1,3 +1,4 @@
+import { Roles } from '../../autenticacion/infraestructura/roles.decorator';
 import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { IsDateString, IsIn, IsInt, IsOptional, IsString, IsUUID, Max, MaxLength, Min, MinLength } from 'class-validator';
 import { CitasServicio, CrearCita } from '../aplicacion/citas.servicio';
@@ -31,6 +32,7 @@ class CambiarEstadoCitaDto {
 }
 
 @Controller('appointments')
+@Roles('admin', 'veterinarian', 'assistant', 'receptionist')
 export class CitasController {
   constructor(private readonly servicio: CitasServicio) {}
 
