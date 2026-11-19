@@ -71,6 +71,8 @@ export const api = {
   appointments: {
     list: () => request<Appointment[]>('/appointments'),
     create: (input: AppointmentInput) => request<Appointment>('/appointments', { method: 'POST', body: JSON.stringify(input) }),
+    update: (id: string, input: Partial<AppointmentInput>) =>
+      request<Appointment>(`/appointments/${id}`, { method: 'PATCH', body: JSON.stringify(input) }),
     updateStatus: (id: string, status: AppointmentStatus) =>
       request<Appointment>(`/appointments/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }),
   },
