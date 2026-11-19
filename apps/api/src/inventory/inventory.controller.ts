@@ -14,7 +14,7 @@ class CreateInventoryItemDto implements CreateInventoryItem {
 class RegisterInventoryMovementDto implements RegisterInventoryMovement {
   @IsUUID() itemId!: string;
   @IsIn(['entry', 'exit', 'adjustment']) type!: InventoryMovementType;
-  @IsNumber() @Min(0.01) @Max(100000000) quantity!: number;
+  @IsNumber() @Min(0) @Max(100000000) quantity!: number;
   @IsString() @MinLength(3) @MaxLength(500) reason!: string;
 }
 
