@@ -27,11 +27,11 @@ export class OwnerTypeOrmRepository implements OwnerRepository {
     return (resultado.affected ?? 0) > 0;
   }
 
-  async existsByDocumentNumber(documentNumber: string, excluirId?: string): Promise<boolean> {
-    return this.repository.exists({ where: { documentNumber, ...(excluirId ? { id: Not(excluirId) } : {}) } });
+  async existsByDocumentNumber(documentNumber: string, excludedId?: string): Promise<boolean> {
+    return this.repository.exists({ where: { documentNumber, ...(excludedId ? { id: Not(excludedId) } : {}) } });
   }
 
-  async existsByEmail(email: string, excluirId?: string): Promise<boolean> {
-    return this.repository.exists({ where: { email, ...(excluirId ? { id: Not(excluirId) } : {}) } });
+  async existsByEmail(email: string, excludedId?: string): Promise<boolean> {
+    return this.repository.exists({ where: { email, ...(excludedId ? { id: Not(excludedId) } : {}) } });
   }
 }

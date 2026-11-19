@@ -18,10 +18,10 @@ describe('Owner', () => {
   });
 
   it('rejects an invalid email address', () => {
-    expect(() => Owner.create({ ...data, email: 'invalid-email' })).toThrow('El email electrónico no es válido');
+    expect(() => Owner.create({ ...data, email: 'invalid-email' })).toThrow('Invalid email address');
   });
 
   it('rejects a missing document number', () => {
-    expect(() => Owner.create({ ...data, documentNumber: ' ' })).toThrow('El documentNumber es obligatorio');
+    expect(() => Owner.create({ ...data, documentNumber: ' ' })).toThrow('Document number is required');
   });
 });

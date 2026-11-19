@@ -1,4 +1,4 @@
-import { ReglaNegocioError } from '../../compartido/domain/regla-negocio.error';
+import { BusinessRuleError } from '../../shared/domain/business-rule.error';
 
 export interface OwnerData {
   id: string;
@@ -17,16 +17,16 @@ export class Owner {
 
   static create(data: OwnerData): Owner {
     if (!data.name.trim() || !data.lastName.trim()) {
-      throw new ReglaNegocioError('El name y el lastName son obligatorios');
+      throw new BusinessRuleError('First and last names are required');
     }
     if (!data.documentNumber.trim()) {
-      throw new ReglaNegocioError('El documentNumber es obligatorio');
+      throw new BusinessRuleError('Document number is required');
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-      throw new ReglaNegocioError('El email electrónico no es válido');
+      throw new BusinessRuleError('Invalid email address');
     }
     if (!data.phone.trim()) {
-      throw new ReglaNegocioError('El teléfono es obligatorio');
+      throw new BusinessRuleError('Phone number is required');
     }
     return new Owner(data);
   }
