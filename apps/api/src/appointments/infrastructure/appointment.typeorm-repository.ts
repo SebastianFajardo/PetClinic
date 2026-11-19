@@ -17,24 +17,24 @@ export class AppointmentTypeOrmRepository implements AppointmentRepository {
     return this.repository.findOne({ where: { id } });
   }
 
-  async list(desde?: Date, hasta?: Date): Promise<AppointmentData[]> {
-    const where = desde && hasta
-      ? { dateTime: Between(desde, hasta) }
-      : desde
-        ? { dateTime: MoreThan(desde) }
-        : hasta
-          ? { dateTime: LessThan(hasta) }
+  async list(from?: Date, to?: Date): Promise<AppointmentData[]> {
+    const where = from && to
+      ? { dateTime: Between(from, to) }
+      : from
+        ? { dateTime: MoreThan(from) }
+        : to
+          ? { dateTime: LessThan(to) }
           : {};
     return this.repository.find({ where, order: { dateTime: 'ASC' } });
   }
 
-  async existeCruce(petId: string, start: Date, end: Date, excluirId?: string): Promise<boolean> {
+  async hasOverlap(petId: string, start: Date, end: Date, excludedId?: string): Promise<boolean> {
     const consulta = this.repository.createQueryBuilder('appointment')
       .where('appointment.pet_id = :petId', { petId })
       .andWhere('appointment.status IN (:...estados)', { estados: ['scheduled', 'confirmed'] })
       .andWhere('appointment.scheduled_at < :end', { end })
       .andWhere("appointment.scheduled_at + (appointment.duration_minutes * interval '1 minute') > :start", { start });
-    if (excluirId) consulta.andWhere('appointment.id != :excluirId', { excluirId });
+    if (excludedId) consulta.andWhere('appointment.id != :excludedId', { excludedId });
     return consulta.getExists();
   }
 }
