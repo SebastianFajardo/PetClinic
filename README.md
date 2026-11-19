@@ -8,6 +8,7 @@ Plataforma web académica para apoyar la gestión clínica, administrativa y log
 - Frontend: React, TypeScript y Vite
 - Database: PostgreSQL
 - Persistence: TypeORM
+- Authentication: JWT y bcryptjs
 - Local infrastructure: Docker Compose
 
 ## Repository structure
@@ -16,6 +17,7 @@ Plataforma web académica para apoyar la gestión clínica, administrativa y log
 apps/
   api/
     src/
+      autenticacion/
       citas/
       compartido/
       estado/
@@ -39,37 +41,64 @@ apps/
 ## Local setup
 
 1. Copy `.env.example` to `.env`.
-2. Install dependencies from the repository root:
+2. Replace `JWT_SECRET` with a unique random secret of at least 32 characters.
+3. Install dependencies from the repository root:
 
    ```bash
    npm install
    ```
 
-3. Start PostgreSQL:
+4. Start PostgreSQL:
 
    ```bash
    docker compose up -d database
    ```
 
-4. Run database migrations:
+5. Run database migrations:
 
    ```bash
    npm run migration:run --workspace @petclinic/api
    ```
 
-5. Start the API:
+6. Start the API:
 
    ```bash
    npm run dev:api
    ```
 
-6. In another terminal, start the web application:
+7. In another terminal, start the web application:
 
    ```bash
    npm run dev:web
    ```
 
 The web application uses `http://localhost:3000/api/v1` by default. Configure `VITE_API_URL` when the API runs at another address.
+
+## Authentication and roles
+
+The API protects routes with JWT. Public endpoints are limited to health status, registration and login.
+
+- `POST /auth/register`: creates an assistant account. The public registration endpoint cannot choose its role.
+- `POST /auth/login`: validates credentials and returns an access token.
+- `GET /auth/me`: returns the identity associated with the bearer token.
+
+Supported roles are `admin`, `veterinarian`, `assistant` and `receptionist`. The `@Roles(...)` decorator and global role guard are available to apply authorization rules to controllers and routes.
+
+For the initial academic environment, register the first account and promote it manually to administrator using a trusted database session:
+
+```sql
+UPDATE users
+SET role = 'admin', updated_at = now()
+WHERE email = 'admin@example.com';
+```
+
+Replace the email with the account created during setup. Do not expose database credentials or the JWT secret in the frontend or repository.
+
+Send the token on protected requests:
+
+```http
+Authorization: Bearer <accessToken>
+```
 
 ## API endpoints
 
@@ -115,6 +144,6 @@ Appointment states are `scheduled`, `confirmed`, `completed`, `cancelled` and `n
 
 ## Current scope
 
-The current increment includes owner and pet management, clinical records, appointment scheduling, PostgreSQL mappings, database migrations, domain unit tests and initial web screens for the four management areas.
+The current increment includes owner and pet management, clinical records, appointment scheduling, JWT authentication, role-based authorization infrastructure, PostgreSQL mappings, database migrations, domain unit tests and initial web screens for the management areas.
 
-Authentication and authorization, treatments as a separate module, inventory, reporting and reminders are not implemented yet. The project is an academic prototype in progress. It has not been validated as a production or TRL5 system.
+Treatments as a separate module, inventory, reporting, reminders and frontend authentication integration remain pending. The project is an academic prototype in progress. It has not been validated as a production or TRL5 system.
