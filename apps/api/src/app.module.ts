@@ -36,8 +36,8 @@ import { PropietariosModule } from './propietarios/propietarios.module';
   ],
   controllers: [EstadoController],
   providers: [
-    { provide: APP_GUARD, useClass: AccesoJwtGuard },
-    { provide: APP_GUARD, useClass: RolesGuard },
+    { provide: APP_GUARD, useExisting: AccesoJwtGuard },
+    { provide: APP_GUARD, useExisting: RolesGuard },
   ],
 })
 export class AppModule {}
