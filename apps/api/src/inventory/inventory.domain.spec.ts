@@ -43,7 +43,11 @@ describe('InventoryMovement', () => {
     expect(InventoryMovement.create(movement).toData()).toEqual(movement);
   });
 
-  it('rejects a zero quantity', () => {
-    expect(() => InventoryMovement.create({ ...movement, quantity: 0 })).toThrow('Movement quantity must be greater than zero');
+  it('allows an adjustment that sets stock to zero', () => {
+    expect(InventoryMovement.create({ ...movement, type: 'adjustment', quantity: 0, previousQuantity: 3, newQuantity: 0 }).toData().newQuantity).toBe(0);
+  });
+
+  it('rejects a zero quantity for entries and exits', () => {
+    expect(() => InventoryMovement.create({ ...movement, quantity: 0 })).toThrow('Movement quantity is invalid');
   });
 });
