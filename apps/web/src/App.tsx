@@ -1,8 +1,10 @@
 import { FormEvent, useCallback, useEffect, useState } from 'react';
 import { api } from './services/api';
+import { AppointmentsPage } from './features/appointments/AppointmentsPage';
+import { MedicalRecordsPage } from './features/medical-records/MedicalRecordsPage';
 import type { Owner, Pet } from './types';
 
-type Section = 'overview' | 'owners' | 'pets';
+type Section = 'overview' | 'owners' | 'pets' | 'appointments' | 'medical-records';
 type RequestState = 'loading' | 'ready' | 'error';
 
 const speciesLabels: Record<Pet['especie'], string> = {
@@ -106,6 +108,12 @@ export default function App() {
           <button className={section === 'pets' ? 'nav-item active' : 'nav-item'} onClick={() => setSection('pets')}>
             <span>♡</span> Mascotas
           </button>
+          <button className={section === 'appointments' ? 'nav-item active' : 'nav-item'} onClick={() => setSection('appointments')}>
+            <span>▦</span> Citas
+          </button>
+          <button className={section === 'medical-records' ? 'nav-item active' : 'nav-item'} onClick={() => setSection('medical-records')}>
+            <span>＋</span> Historias clínicas
+          </button>
         </nav>
         <div className="sidebar-footer">
           <span className={apiConnected ? 'connection-dot online' : 'connection-dot'} />
@@ -117,7 +125,7 @@ export default function App() {
         <header className="topbar">
           <div>
             <span className="eyebrow">PLATAFORMA DE GESTIÓN VETERINARIA</span>
-            <h1>{section === 'overview' ? 'Resumen general' : section === 'owners' ? 'Propietarios' : 'Mascotas'}</h1>
+            <h1>{section === 'overview' ? 'Resumen general' : section === 'owners' ? 'Propietarios' : section === 'pets' ? 'Mascotas' : section === 'appointments' ? 'Citas' : 'Historias clínicas'}</h1>
           </div>
           <button className="refresh-button" onClick={() => void loadData()} aria-label="Actualizar información">↻</button>
         </header>
@@ -171,6 +179,10 @@ export default function App() {
             </tbody></table>{owners.length === 0 && <p className="table-empty">Todavía no hay propietarios registrados.</p>}</div>
           </section>
         )}
+
+        {requestState === 'ready' && section === 'appointments' && <AppointmentsPage pets={pets} />}
+
+        {requestState === 'ready' && section === 'medical-records' && <MedicalRecordsPage pets={pets} />}
 
         {requestState === 'ready' && section === 'pets' && (
           <section className="content-card">
