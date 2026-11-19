@@ -77,7 +77,7 @@ export const api = {
       request<Appointment>(`/appointments/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }),
   },
   medicalRecords: {
-    list: () => request<MedicalRecord[]>('/medical-records'),
+    list: (petId?: string) => request<MedicalRecord[]>(`/medical-records${petId ? `?petId=${encodeURIComponent(petId)}` : ''}`),
     create: (input: MedicalRecordInput) =>
       request<MedicalRecord>('/medical-records', { method: 'POST', body: JSON.stringify(input) }),
   },
