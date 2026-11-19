@@ -1,43 +1,206 @@
-import { useEffect, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useState } from 'react';
+import { api } from './services/api';
+import type { Owner, Pet } from './types';
 
-type HealthStatus = 'loading' | 'connected' | 'disconnected';
+type Section = 'overview' | 'owners' | 'pets';
+type RequestState = 'loading' | 'ready' | 'error';
 
-const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api/v1';
+const speciesLabels: Record<Pet['especie'], string> = {
+  dog: 'Perro',
+  cat: 'Gato',
+  bird: 'Ave',
+  other: 'Otro',
+};
 
 export default function App() {
-  const [healthStatus, setHealthStatus] = useState<HealthStatus>('loading');
+  const [section, setSection] = useState<Section>('overview');
+  const [owners, setOwners] = useState<Owner[]>([]);
+  const [pets, setPets] = useState<Pet[]>([]);
+  const [requestState, setRequestState] = useState<RequestState>('loading');
+  const [apiConnected, setApiConnected] = useState(false);
+  const [error, setError] = useState('');
+  const [showOwnerForm, setShowOwnerForm] = useState(false);
+  const [showPetForm, setShowPetForm] = useState(false);
 
-  useEffect(() => {
-    const controller = new AbortController();
-    fetch(`${apiUrl}/health`, { signal: controller.signal })
-      .then((response) => {
-        if (!response.ok) throw new Error('API unavailable');
-        return response.json();
-      })
-      .then(() => setHealthStatus('connected'))
-      .catch(() => {
-        if (!controller.signal.aborted) setHealthStatus('disconnected');
-      });
-    return () => controller.abort();
+  const loadData = useCallback(async () => {
+    setRequestState('loading');
+    setError('');
+    try {
+      const [ownerList, petList, health] = await Promise.all([
+        api.owners.list(),
+        api.pets.list(),
+        api.health(),
+      ]);
+      setOwners(ownerList);
+      setPets(petList);
+      setApiConnected(health.status === 'ok');
+      setRequestState('ready');
+    } catch (cause) {
+      setApiConnected(false);
+      setRequestState('error');
+      setError(cause instanceof Error ? cause.message : 'No fue posible cargar la información');
+    }
   }, []);
 
-  const statusLabels: Record<HealthStatus, string> = {
-    loading: 'Verificando conexión',
-    connected: 'API conectada',
-    disconnected: 'API no disponible',
-  };
+  useEffect(() => {
+    void loadData();
+  }, [loadData]);
+
+  async function createOwner(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    try {
+      await api.owners.create({
+        nombre: String(form.get('firstName')),
+        apellido: String(form.get('lastName')),
+        documento: String(form.get('document')),
+        correo: String(form.get('email')),
+        telefono: String(form.get('phone')),
+        direccion: String(form.get('address')),
+      });
+      setShowOwnerForm(false);
+      await loadData();
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'No fue posible registrar el propietario');
+    }
+  }
+
+  async function createPet(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const weight = String(form.get('weight'));
+    try {
+      await api.pets.create({
+        propietarioId: String(form.get('ownerId')),
+        nombre: String(form.get('name')),
+        especie: String(form.get('species')) as Pet['especie'],
+        raza: String(form.get('breed')),
+        fechaNacimiento: String(form.get('birthDate')) || undefined,
+        sexo: String(form.get('sex')) as Pet['sexo'],
+        color: String(form.get('color')),
+        pesoKg: weight ? Number(weight) : undefined,
+        notas: String(form.get('notes')),
+      });
+      setShowPetForm(false);
+      await loadData();
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'No fue posible registrar la mascota');
+    }
+  }
 
   return (
-    <main className="page-shell">
-      <section className="hero-card">
-        <span className="eyebrow">GESTIÓN VETERINARIA EN LA NUBE</span>
-        <h1>PetClinic Cloud</h1>
-        <p>Una plataforma centralizada para la gestión clínica y administrativa veterinaria.</p>
-        <div className={`connection-status ${healthStatus}`}>
-          <span className="status-indicator" />
-          {statusLabels[healthStatus]}
+    <div className="app-shell">
+      <aside className="sidebar">
+        <a className="brand" href="#" onClick={() => setSection('overview')}>
+          <span className="brand-mark">P</span>
+          <span>PetClinic <strong>Cloud</strong></span>
+        </a>
+        <span className="nav-caption">GESTIÓN</span>
+        <nav className="navigation">
+          <button className={section === 'overview' ? 'nav-item active' : 'nav-item'} onClick={() => setSection('overview')}>
+            <span>⌂</span> Resumen
+          </button>
+          <button className={section === 'owners' ? 'nav-item active' : 'nav-item'} onClick={() => setSection('owners')}>
+            <span>♙</span> Propietarios
+          </button>
+          <button className={section === 'pets' ? 'nav-item active' : 'nav-item'} onClick={() => setSection('pets')}>
+            <span>♡</span> Mascotas
+          </button>
+        </nav>
+        <div className="sidebar-footer">
+          <span className={apiConnected ? 'connection-dot online' : 'connection-dot'} />
+          <span>{apiConnected ? 'API conectada' : 'API desconectada'}</span>
         </div>
-      </section>
-    </main>
+      </aside>
+
+      <main className="main-content">
+        <header className="topbar">
+          <div>
+            <span className="eyebrow">PLATAFORMA DE GESTIÓN VETERINARIA</span>
+            <h1>{section === 'overview' ? 'Resumen general' : section === 'owners' ? 'Propietarios' : 'Mascotas'}</h1>
+          </div>
+          <button className="refresh-button" onClick={() => void loadData()} aria-label="Actualizar información">↻</button>
+        </header>
+
+        {error && <div className="error-banner" role="alert">{error}</div>}
+        {requestState === 'loading' && <div className="loading-state">Cargando información...</div>}
+        {requestState === 'error' && (
+          <section className="empty-state">
+            <h2>No fue posible conectar con PetClinic API</h2>
+            <p>Verifica que el backend esté ejecutándose y que PostgreSQL esté disponible.</p>
+            <button className="primary-button" onClick={() => void loadData()}>Reintentar</button>
+          </section>
+        )}
+
+        {requestState === 'ready' && section === 'overview' && (
+          <>
+            <section className="welcome-panel">
+              <div>
+                <span className="welcome-label">PANEL DE CONTROL</span>
+                <h2>Todo tu centro veterinario, en un solo lugar.</h2>
+                <p>Administra propietarios y pacientes desde una plataforma centralizada.</p>
+              </div>
+              <div className="welcome-symbol">✚</div>
+            </section>
+            <section className="stats-grid">
+              <article className="stat-card"><span>Propietarios registrados</span><strong>{owners.length}</strong><small>Registros activos</small></article>
+              <article className="stat-card"><span>Mascotas registradas</span><strong>{pets.length}</strong><small>Pacientes registrados</small></article>
+              <article className="stat-card"><span>Estado del sistema</span><strong className="system-value">Operativo</strong><small>Conexión con API establecida</small></article>
+            </section>
+            <section className="content-card">
+              <div className="section-heading"><div><h2>Registros recientes</h2><p>Últimos pacientes agregados</p></div><button className="text-button" onClick={() => setSection('pets')}>Ver mascotas</button></div>
+              <PetTable pets={pets.slice(0, 5)} owners={owners} />
+            </section>
+          </>
+        )}
+
+        {requestState === 'ready' && section === 'owners' && (
+          <section className="content-card">
+            <div className="section-heading"><div><h2>Directorio de propietarios</h2><p>{owners.length} propietarios registrados</p></div><button className="primary-button" onClick={() => setShowOwnerForm(!showOwnerForm)}>+ Nuevo propietario</button></div>
+            {showOwnerForm && <form className="data-form" onSubmit={createOwner}>
+              <label>Nombres<input name="firstName" required minLength={2} maxLength={100} /></label>
+              <label>Apellidos<input name="lastName" required minLength={2} maxLength={100} /></label>
+              <label>Documento<input name="document" required minLength={3} maxLength={30} /></label>
+              <label>Correo electrónico<input name="email" type="email" required /></label>
+              <label>Teléfono<input name="phone" required minLength={7} /></label>
+              <label>Dirección<input name="address" /></label>
+              <div className="form-actions"><button className="primary-button" type="submit">Guardar propietario</button><button className="secondary-button" type="button" onClick={() => setShowOwnerForm(false)}>Cancelar</button></div>
+            </form>}
+            <div className="table-wrap"><table><thead><tr><th>Propietario</th><th>Documento</th><th>Correo</th><th>Teléfono</th></tr></thead><tbody>
+              {owners.map(owner => <tr key={owner.id}><td><strong>{owner.nombre} {owner.apellido}</strong></td><td>{owner.documento}</td><td>{owner.correo}</td><td>{owner.telefono}</td></tr>)}
+            </tbody></table>{owners.length === 0 && <p className="table-empty">Todavía no hay propietarios registrados.</p>}</div>
+          </section>
+        )}
+
+        {requestState === 'ready' && section === 'pets' && (
+          <section className="content-card">
+            <div className="section-heading"><div><h2>Pacientes</h2><p>{pets.length} mascotas registradas</p></div><button className="primary-button" onClick={() => setShowPetForm(!showPetForm)} disabled={owners.length === 0}>+ Nueva mascota</button></div>
+            {owners.length === 0 && <p className="info-banner">Registra primero un propietario para poder asociar una mascota.</p>}
+            {showPetForm && <form className="data-form" onSubmit={createPet}>
+              <label>Propietario<select name="ownerId" required>{owners.map(owner => <option key={owner.id} value={owner.id}>{owner.nombre} {owner.apellido}</option>)}</select></label>
+              <label>Nombre<input name="name" required maxLength={120} /></label>
+              <label>Especie<select name="species"><option value="dog">Perro</option><option value="cat">Gato</option><option value="bird">Ave</option><option value="other">Otro</option></select></label>
+              <label>Raza<input name="breed" /></label>
+              <label>Fecha de nacimiento<input name="birthDate" type="date" /></label>
+              <label>Sexo<select name="sex"><option value="unknown">Sin especificar</option><option value="male">Macho</option><option value="female">Hembra</option></select></label>
+              <label>Color<input name="color" /></label>
+              <label>Peso (kg)<input name="weight" type="number" min="0.01" max="500" step="0.01" /></label>
+              <label className="full-field">Notas<textarea name="notes" rows={3} /></label>
+              <div className="form-actions"><button className="primary-button" type="submit">Guardar mascota</button><button className="secondary-button" type="button" onClick={() => setShowPetForm(false)}>Cancelar</button></div>
+            </form>}
+            <PetTable pets={pets} owners={owners} />
+          </section>
+        )}
+      </main>
+    </div>
+  );
+}
+
+function PetTable({ pets, owners }: { pets: Pet[]; owners: Owner[] }) {
+  const ownerNames = new Map(owners.map(owner => [owner.id, `${owner.nombre} ${owner.apellido}`]));
+  return (
+    <div className="table-wrap"><table><thead><tr><th>Mascota</th><th>Especie</th><th>Raza</th><th>Propietario</th><th>Peso</th></tr></thead><tbody>
+      {pets.map(pet => <tr key={pet.id}><td><strong>{pet.nombre}</strong></td><td>{speciesLabels[pet.especie]}</td><td>{pet.raza ?? '—'}</td><td>{ownerNames.get(pet.propietarioId) ?? '—'}</td><td>{pet.pesoKg ? `${pet.pesoKg} kg` : '—'}</td></tr>)}
+    </tbody></table>{pets.length === 0 && <p className="table-empty">Todavía no hay mascotas registradas.</p>}</div>
   );
 }
