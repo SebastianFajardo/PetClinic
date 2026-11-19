@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import { InventoryItem, InventoryItemData, InventoryMovement, InventoryMovementData, InventoryMovementType, InventoryRepository } from './inventory.domain';
 
@@ -26,6 +26,10 @@ export class InventoryService {
   }
 
   async registerMovement(input: RegisterInventoryMovement): Promise<InventoryMovementData> {
+    if (!Number.isFinite(input.quantity) || input.quantity < 0 || (input.type !== 'adjustment' && input.quantity === 0)) {
+      throw new BadRequestException('Movement quantity is invalid');
+    }
+    if (!input.reason.trim()) throw new BadRequestException('Movement reason is required');
     if (!(await this.repository.findItemById(input.itemId))) throw new NotFoundException('Inventory item was not found');
     const result = await this.repository.registerMovement({ ...input, id: randomUUID(), reason: input.reason.trim(), createdAt: new Date() });
     return InventoryMovement.create(result).toData();
