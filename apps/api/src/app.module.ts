@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AutenticacionModule } from './autenticacion/autenticacion.module';
+import { AccesoJwtGuard } from './autenticacion/infraestructura/guards/acceso-jwt.guard';
+import { RolesGuard } from './autenticacion/infraestructura/guards/roles.guard';
 import { CitasModule } from './citas/citas.module';
 import { EstadoController } from './estado/infraestructura/estado.controller';
 import { HistoriasClinicasModule } from './historias-clinicas/historias-clinicas.module';
@@ -24,11 +28,16 @@ import { PropietariosModule } from './propietarios/propietarios.module';
         synchronize: false,
       }),
     }),
+    AutenticacionModule,
     PropietariosModule,
     MascotasModule,
     HistoriasClinicasModule,
     CitasModule,
   ],
   controllers: [EstadoController],
+  providers: [
+    { provide: APP_GUARD, useClass: AccesoJwtGuard },
+    { provide: APP_GUARD, useClass: RolesGuard },
+  ],
 })
 export class AppModule {}
