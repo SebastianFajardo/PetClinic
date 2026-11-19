@@ -1,21 +1,21 @@
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { RolUser } from '../../domain/user';
+import { UserRole } from '../../domain/user';
 
-export const ROLES_PERMITIDOS = 'roles_permitidos';
+export const ROLES_PERMITIDOS = 'rolees_permitidos';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const roles = this.reflector.getAllAndOverride<RolUser[]>(ROLES_PERMITIDOS, [
+    const rolees = this.reflector.getAllAndOverride<UserRole[]>(ROLES_PERMITIDOS, [
       context.getHandler(),
       context.getClass(),
     ]);
-    if (!roles?.length) return true;
-    const request = context.switchToHttp().getRequest<{ user?: { role: RolUser } }>();
-    if (!request.user || !roles.includes(request.user.role)) {
+    if (!rolees?.length) return true;
+    const request = context.switchToHttp().getRequest<{ user?: { rolee: UserRole } }>();
+    if (!request.user || !rolees.includes(request.user.rolee)) {
       throw new ForbiddenException('No tiene permisos para realizar esta operación');
     }
     return true;

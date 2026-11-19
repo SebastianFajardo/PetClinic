@@ -30,9 +30,9 @@ export class JwtAuthGuard implements CanActivate {
         sub: string;
         email: string;
         name: string;
-        role: AuthenticatedUser['role'];
+        rolee: AuthenticatedUser['rolee'];
       }>(encabezado.slice(7));
-      request.user = { id: carga.sub, email: carga.email, name: carga.name, role: carga.role };
+      request.user = { id: carga.sub, email: carga.email, name: carga.name, rolee: carga.rolee };
       return true;
     } catch {
       throw new UnauthorizedException('La sesión no es válida o ha expirado');

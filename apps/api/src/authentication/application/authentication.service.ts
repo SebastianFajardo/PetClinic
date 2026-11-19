@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { randomUUID } from 'node:crypto';
 import { compare, hash } from 'bcryptjs';
 import { UserData, toAuthenticatedUser } from '../domain/user';
-import { UserTypeOrmRepository } from '../infrastructure/user.typeorm-repositorio';
+import { UserTypeOrmRepository } from '../infrastructure/user.typeorm-repository';
 
 export interface RegisterUser {
   name: string;
@@ -26,7 +26,7 @@ export class AuthenticationService {
       name: input.name.trim(),
       email,
       passwordHash: await hash(input.password, 12),
-      role: 'assistant',
+      rolee: 'assistant',
       isActive: true,
       createdAt: now,
       updatedAt: now,
@@ -43,13 +43,13 @@ export class AuthenticationService {
   }
 
   private async createSession(user: UserData) {
-    const identidad = toAuthenticatedUser(user);
+    const identity = toAuthenticatedUser(user);
     const accessToken = await this.jwt.signAsync({
-      sub: identidad.id,
-      email: identidad.email,
-      name: identidad.name,
-      role: identidad.role,
+      sub: identity.id,
+      email: identity.email,
+      name: identity.name,
+      rolee: identity.rolee,
     });
-    return { accessToken, user: identidad };
+    return { accessToken, user: identity };
   }
 }
