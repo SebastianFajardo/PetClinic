@@ -1,8 +1,8 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
 import { AutenticacionServicio } from '../aplicacion/autenticacion.servicio';
-import { AccesoJwtGuard } from './guards/acceso-jwt.guard';
 import { UsuarioActual } from './usuario-actual.decorator';
+import { Publica } from './publica.decorator';
 import { UsuarioAutenticado } from '../dominio/usuario';
 
 class RegistrarUsuarioDto {
@@ -37,17 +37,18 @@ export class AutenticacionController {
   constructor(private readonly servicio: AutenticacionServicio) {}
 
   @Post('register')
+  @Publica()
   registrar(@Body() entrada: RegistrarUsuarioDto) {
     return this.servicio.registrar(entrada);
   }
 
   @Post('login')
+  @Publica()
   iniciarSesion(@Body() entrada: IniciarSesionDto) {
     return this.servicio.iniciarSesion(entrada.correo, entrada.contrasena);
   }
 
   @Get('me')
-  @UseGuards(AccesoJwtGuard)
   obtenerSesion(@UsuarioActual() usuario: UsuarioAutenticado) {
     return usuario;
   }
