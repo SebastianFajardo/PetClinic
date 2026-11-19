@@ -1,11 +1,12 @@
 import { FormEvent, useCallback, useEffect, useState } from 'react';
 import { AppointmentsPage } from './features/appointments/AppointmentsPage';
 import { MedicalRecordsPage } from './features/medical-records/MedicalRecordsPage';
+import { TreatmentsPage } from './features/treatments/TreatmentsPage';
 import type { Owner, Pet } from './types';
 import { AuthPage } from './features/auth/AuthPage';
 import { api, sessionStorage, type AuthSession, type AuthUser } from './services/api';
 
-type Section = 'overview' | 'owners' | 'pets' | 'appointments' | 'medical-records';
+type Section = 'overview' | 'owners' | 'pets' | 'appointments' | 'medical-records' | 'treatments';
 type RequestState = 'loading' | 'ready' | 'error';
 
 const speciesLabels: Record<Pet['species'], string> = {
@@ -115,6 +116,9 @@ function Dashboard({ user, onLogout }: { user: AuthUser; onLogout: () => void })
           {['admin', 'veterinarian'].includes(user.role) && <button className={section === 'medical-records' ? 'nav-item active' : 'nav-item'} onClick={() => setSection('medical-records')}>
             <span>＋</span> Historias clínicas
           </button>}
+          {['admin', 'veterinarian', 'assistant'].includes(user.role) && <button className={section === 'treatments' ? 'nav-item active' : 'nav-item'} onClick={() => setSection('treatments')}>
+            <span>♡</span> Tratamientos
+          </button>}
         </nav>
         <div className="sidebar-footer">
           <span className={apiConnected ? 'connection-dot online' : 'connection-dot'} />
@@ -126,7 +130,7 @@ function Dashboard({ user, onLogout }: { user: AuthUser; onLogout: () => void })
         <header className="topbar">
           <div>
             <span className="eyebrow">PLATAFORMA DE GESTIÓN VETERINARIA</span>
-            <h1>{section === 'overview' ? 'Resumen general' : section === 'owners' ? 'Propietarios' : section === 'pets' ? 'Mascotas' : section === 'appointments' ? 'Citas' : 'Historias clínicas'}</h1>
+            <h1>{section === 'overview' ? 'Resumen general' : section === 'owners' ? 'Propietarios' : section === 'pets' ? 'Mascotas' : section === 'appointments' ? 'Citas' : section === 'medical-records' ? 'Historias clínicas' : 'Tratamientos y controles'}</h1>
           </div>
           <div className="account-actions"><div className="account-identity"><strong>{user.name}</strong><span>{user.role}</span></div><button className="secondary-button" onClick={onLogout}>Cerrar sesión</button><button className="refresh-button" onClick={() => void loadData()} aria-label="Actualizar información">↻</button></div>
         </header>
@@ -184,6 +188,8 @@ function Dashboard({ user, onLogout }: { user: AuthUser; onLogout: () => void })
         {requestState === 'ready' && section === 'appointments' && <AppointmentsPage pets={pets} />}
 
         {requestState === 'ready' && section === 'medical-records' && ['admin', 'veterinarian'].includes(user.role) && <MedicalRecordsPage pets={pets} />}
+
+        {requestState === 'ready' && section === 'treatments' && ['admin', 'veterinarian', 'assistant'].includes(user.role) && <TreatmentsPage pets={pets} />}
 
         {requestState === 'ready' && section === 'pets' && (
           <section className="content-card">

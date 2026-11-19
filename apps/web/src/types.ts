@@ -91,3 +91,56 @@ export interface MedicalRecordInput {
   notes?: string;
   recordedAt?: string;
 }
+
+export type TreatmentStatus = 'active' | 'completed' | 'cancelled';
+
+export interface TreatmentControl {
+  id: string;
+  treatmentId: string;
+  controlDate: string;
+  observations: string;
+  outcome: string;
+  nextControlAt: string | null;
+  createdAt: string;
+}
+
+export interface Treatment {
+  id: string;
+  petId: string;
+  medicalRecordId: string | null;
+  veterinarianName: string;
+  name: string;
+  description: string;
+  medication: string | null;
+  dosage: string | null;
+  frequency: string | null;
+  startDate: string;
+  endDate: string | null;
+  status: TreatmentStatus;
+  nextControlAt: string | null;
+  notes: string | null;
+  controls: TreatmentControl[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TreatmentInput {
+  petId: string;
+  veterinarianName: string;
+  name: string;
+  description: string;
+  medication?: string;
+  dosage?: string;
+  frequency?: string;
+  startDate: string;
+  endDate?: string;
+  nextControlAt?: string;
+  notes?: string;
+}
+
+export interface TreatmentControlInput {
+  controlDate: string;
+  observations: string;
+  outcome: string;
+  nextControlAt?: string;
+}

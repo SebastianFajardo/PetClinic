@@ -83,3 +83,13 @@ td strong { color: #29475a; font-weight: 600; }
 .auth-form input:focus { border-color: #388c7c; }
 .auth-form .primary-button { min-height: 44px; margin-top: 4px; }
 @media (max-width: 650px) { .account-actions { gap: 7px; } .account-identity { display: none; } .auth-card { padding: 28px 22px; } }
+
+.table-secondary { display: block; margin-top: 4px; color: #8a9aa5; font-size: 10px; }
+.table-actions { display: flex; align-items: center; gap: 8px; }
+.table-actions select { max-width: 125px; padding: 7px; border: 1px solid #dce5e9; border-radius: 7px; background: #fff; color: #536c7b; font-size: 11px; }
+.treatment-history { margin-top: 28px; padding: 20px 0 0; border: 0; border-top: 1px solid #e8eef1; border-radius: 0; box-shadow: none; }
+.control-entry { padding: 16px 0; border-bottom: 1px solid #edf1f3; }
+.control-entry > strong { color: #29475a; font-size: 13px; }
+.control-detail { margin: 12px 0 0 12px; padding-left: 14px; border-left: 2px solid #9bcfc2; }
+.control-detail span, .control-detail small { color: #81919d; font-size: 10px; }
+.control-detail p { margin: 6px 0; color: #536d7b; font-size: 12px; }

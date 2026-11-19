@@ -11,6 +11,7 @@ import { HealthController } from './health/infrastructure/health.controller';
 import { MedicalRecordsModule } from './medical-records/medical-records.module';
 import { PetsModule } from './pets/pets.module';
 import { OwnersModule } from './owners/owners.module';
+import { TreatmentsModule } from './treatments/treatments.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { OwnersModule } from './owners/owners.module';
     PetsModule,
     MedicalRecordsModule,
     AppointmentsModule,
+    TreatmentsModule,
   ],
   controllers: [HealthController],
   providers: [
