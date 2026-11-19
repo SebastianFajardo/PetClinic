@@ -1,33 +1,33 @@
 import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn, UpdateDateColumn } from 'typeorm';
-import { PropietarioOrm } from '../../propietarios/infraestructura/propietario.orm-entity';
+import { OwnerOrm } from '../../propietarios/infrastructure/owner.orm-entity';
 
 @Entity({ name: 'pets' })
-@Index('IDX_pets_owner_id', ['propietarioId'])
-export class MascotaOrm {
+@Index('IDX_pets_owner_id', ['ownerId'])
+export class PetOrm {
   @PrimaryColumn('uuid')
   id!: string;
 
   @Column({ name: 'owner_id', type: 'uuid' })
-  propietarioId!: string;
+  ownerId!: string;
 
-  @ManyToOne(() => PropietarioOrm, { onDelete: 'RESTRICT' })
+  @ManyToOne(() => OwnerOrm, { onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'owner_id' })
-  propietario!: PropietarioOrm;
+  owner!: OwnerOrm;
 
   @Column({ name: 'name', type: 'varchar', length: 120 })
-  nombre!: string;
+  name!: string;
 
   @Column({ name: 'species', type: 'varchar', length: 20 })
-  especie!: string;
+  species!: string;
 
   @Column({ name: 'breed', type: 'varchar', length: 100, nullable: true })
-  raza!: string | null;
+  breed!: string | null;
 
   @Column({ name: 'birth_date', type: 'date', nullable: true })
-  fechaNacimiento!: string | null;
+  birthDate!: string | null;
 
   @Column({ name: 'sex', type: 'varchar', length: 20, default: 'unknown' })
-  sexo!: string;
+  sex!: string;
 
   @Column({ name: 'color', type: 'varchar', length: 80, nullable: true })
   color!: string | null;
@@ -39,8 +39,8 @@ export class MascotaOrm {
   notas!: string | null;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
-  creadoEn!: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
-  actualizadoEn!: Date;
+  updatedAt!: Date;
 }

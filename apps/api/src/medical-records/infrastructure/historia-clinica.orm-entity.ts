@@ -1,18 +1,18 @@
 import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
-import { MascotaOrm } from '../../mascotas/infraestructura/mascota.orm-entity';
+import { PetOrm } from '../../pets/infrastructure/pet.orm-entity';
 
 @Entity({ name: 'medical_records' })
 @Index('IDX_medical_records_pet_recorded_at', ['mascotaId', 'registradaEn'])
-export class HistoriaClinicaOrm {
+export class MedicalRecordOrm {
   @PrimaryColumn('uuid')
   id!: string;
 
   @Column({ name: 'pet_id', type: 'uuid' })
   mascotaId!: string;
 
-  @ManyToOne(() => MascotaOrm, { onDelete: 'RESTRICT' })
+  @ManyToOne(() => PetOrm, { onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'pet_id' })
-  mascota!: MascotaOrm;
+  pet!: PetOrm;
 
   @Column({ name: 'veterinarian_name', type: 'varchar', length: 160 })
   nombreVeterinario!: string;
@@ -36,5 +36,5 @@ export class HistoriaClinicaOrm {
   registradaEn!: Date;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
-  creadaEn!: Date;
+  createdAt!: Date;
 }
