@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import { PropietarioRepositorio } from '../../propietarios/dominio/propietario.repositorio';
 import { DatosMascota, EspecieMascota, Mascota, SexoMascota } from '../dominio/mascota';
@@ -19,8 +19,8 @@ export interface CrearMascota {
 @Injectable()
 export class MascotasServicio {
   constructor(
-    private readonly repositorio: MascotaRepositorio,
-    private readonly propietarios: PropietarioRepositorio,
+    @Inject('MascotaRepositorio') private readonly repositorio: MascotaRepositorio,
+    @Inject('PropietarioRepositorio') private readonly propietarios: PropietarioRepositorio,
   ) {}
 
   async crear(entrada: CrearMascota): Promise<DatosMascota> {
