@@ -34,7 +34,7 @@ export class InventoryMovement {
   static create(data: InventoryMovementData): InventoryMovement {
     if (!data.itemId.trim()) throw new BusinessRuleError('An inventory item is required');
     if (!['entry', 'exit', 'adjustment'].includes(data.type)) throw new BusinessRuleError('Movement type is invalid');
-    if (!Number.isFinite(data.quantity) || data.quantity <= 0) throw new BusinessRuleError('Movement quantity must be greater than zero');
+    if (!Number.isFinite(data.quantity) || data.quantity < 0 || (data.type !== 'adjustment' && data.quantity === 0)) throw new BusinessRuleError('Movement quantity is invalid');
     if (!Number.isFinite(data.previousQuantity) || data.previousQuantity < 0 || !Number.isFinite(data.newQuantity) || data.newQuantity < 0) throw new BusinessRuleError('Stock quantity is invalid');
     if (!data.reason.trim()) throw new BusinessRuleError('Movement reason is required');
     return new InventoryMovement(data);
