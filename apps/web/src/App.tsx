@@ -1,9 +1,11 @@
-import { FormEvent, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { AppointmentsPage } from './features/appointments/AppointmentsPage';
 import { MedicalRecordsPage } from './features/medical-records/MedicalRecordsPage';
 import { TreatmentsPage } from './features/treatments/TreatmentsPage';
 import { InventoryPage } from './features/inventory/InventoryPage';
 import { ReportsPage } from './features/reports/ReportsPage';
+import { OwnersPage } from './features/owners/OwnersPage';
+import { PetsPage } from './features/pets/PetsPage';
 import type { Owner, Pet } from './types';
 import { AuthPage } from './features/auth/AuthPage';
 import { api, sessionStorage, type AuthSession, type AuthUser } from './services/api';
@@ -25,8 +27,6 @@ function Dashboard({ user, onLogout }: { user: AuthUser; onLogout: () => void })
   const [requestState, setRequestState] = useState<RequestState>('loading');
   const [apiConnected, setApiConnected] = useState(false);
   const [error, setError] = useState('');
-  const [showOwnerForm, setShowOwnerForm] = useState(false);
-  const [showPetForm, setShowPetForm] = useState(false);
 
   const loadData = useCallback(async () => {
     setRequestState('loading');
@@ -52,47 +52,6 @@ function Dashboard({ user, onLogout }: { user: AuthUser; onLogout: () => void })
     void loadData();
   }, [loadData]);
 
-  async function createOwner(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    try {
-      await api.owners.create({
-        name: String(form.get('firstName')),
-        lastName: String(form.get('lastName')),
-        documentNumber: String(form.get('document')),
-        email: String(form.get('email')),
-        phone: String(form.get('phone')),
-        address: String(form.get('address')),
-      });
-      setShowOwnerForm(false);
-      await loadData();
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'No fue posible registrar el propietario');
-    }
-  }
-
-  async function createPet(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    const weight = String(form.get('weight'));
-    try {
-      await api.pets.create({
-        ownerId: String(form.get('ownerId')),
-        name: String(form.get('name')),
-        species: String(form.get('species')) as Pet['species'],
-        breed: String(form.get('breed')),
-        birthDate: String(form.get('birthDate')) || undefined,
-        sex: String(form.get('sex')) as Pet['sex'],
-        color: String(form.get('color')),
-        weightKg: weight ? Number(weight) : undefined,
-        notes: String(form.get('notes')),
-      });
-      setShowPetForm(false);
-      await loadData();
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'No fue posible registrar la mascota');
-    }
-  }
 
   return (
     <div className="app-shell">
@@ -175,23 +134,7 @@ function Dashboard({ user, onLogout }: { user: AuthUser; onLogout: () => void })
           </>
         )}
 
-        {requestState === 'ready' && section === 'owners' && (
-          <section className="content-card">
-            <div className="section-heading"><div><h2>Directorio de propietarios</h2><p>{owners.length} propietarios registrados</p></div><button className="primary-button" onClick={() => setShowOwnerForm(!showOwnerForm)}>+ Nuevo propietario</button></div>
-            {showOwnerForm && <form className="data-form" onSubmit={createOwner}>
-              <label>Nombres<input name="firstName" required minLength={2} maxLength={100} /></label>
-              <label>Apellidos<input name="lastName" required minLength={2} maxLength={100} /></label>
-              <label>Documento<input name="document" required minLength={3} maxLength={30} /></label>
-              <label>Correo electrónico<input name="email" type="email" required /></label>
-              <label>Teléfono<input name="phone" required minLength={7} /></label>
-              <label>Dirección<input name="address" /></label>
-              <div className="form-actions"><button className="primary-button" type="submit">Guardar propietario</button><button className="secondary-button" type="button" onClick={() => setShowOwnerForm(false)}>Cancelar</button></div>
-            </form>}
-            <div className="table-wrap"><table><thead><tr><th>Propietario</th><th>Documento</th><th>Correo</th><th>Teléfono</th></tr></thead><tbody>
-              {owners.map(owner => <tr key={owner.id}><td><strong>{owner.name} {owner.lastName}</strong></td><td>{owner.documentNumber}</td><td>{owner.email}</td><td>{owner.phone}</td></tr>)}
-            </tbody></table>{owners.length === 0 && <p className="table-empty">Todavía no hay propietarios registrados.</p>}</div>
-          </section>
-        )}
+        {requestState === 'ready' && section === 'owners' && <OwnersPage owners={owners} onChanged={loadData} />}
 
         {requestState === 'ready' && section === 'appointments' && <AppointmentsPage pets={pets} />}
 
@@ -203,25 +146,8 @@ function Dashboard({ user, onLogout }: { user: AuthUser; onLogout: () => void })
 
         {requestState === 'ready' && section === 'reports' && ['admin', 'veterinarian'].includes(user.role) && <ReportsPage />}
 
-        {requestState === 'ready' && section === 'pets' && (
-          <section className="content-card">
-            <div className="section-heading"><div><h2>Pacientes</h2><p>{pets.length} mascotas registradas</p></div><button className="primary-button" onClick={() => setShowPetForm(!showPetForm)} disabled={owners.length === 0}>+ Nueva mascota</button></div>
-            {owners.length === 0 && <p className="info-banner">Registra primero un propietario para poder asociar una mascota.</p>}
-            {showPetForm && <form className="data-form" onSubmit={createPet}>
-              <label>Propietario<select name="ownerId" required>{owners.map(owner => <option key={owner.id} value={owner.id}>{owner.name} {owner.lastName}</option>)}</select></label>
-              <label>Nombre<input name="name" required maxLength={120} /></label>
-              <label>Especie<select name="species"><option value="dog">Perro</option><option value="cat">Gato</option><option value="bird">Ave</option><option value="other">Otro</option></select></label>
-              <label>Raza<input name="breed" /></label>
-              <label>Fecha de nacimiento<input name="birthDate" type="date" /></label>
-              <label>Sexo<select name="sex"><option value="unknown">Sin especificar</option><option value="male">Macho</option><option value="female">Hembra</option></select></label>
-              <label>Color<input name="color" /></label>
-              <label>Peso (kg)<input name="weight" type="number" min="0.01" max="500" step="0.01" /></label>
-              <label className="full-field">Notas<textarea name="notes" rows={3} /></label>
-              <div className="form-actions"><button className="primary-button" type="submit">Guardar mascota</button><button className="secondary-button" type="button" onClick={() => setShowPetForm(false)}>Cancelar</button></div>
-            </form>}
-            <PetTable pets={pets} owners={owners} />
-          </section>
-        )}
+        {requestState === 'ready' && section === 'pets' && <PetsPage pets={pets} owners={owners} onChanged={loadData} />}
+
       </main>
     </div>
   );
