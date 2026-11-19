@@ -39,8 +39,10 @@ async function request<T>(path: string, options?: RequestInit, authenticated = t
     throw new Error(message ?? 'No fue posible completar la solicitud');
   }
 
-  if (response.status === 204) return undefined as T;
-  return response.json() as Promise<T>;
+  if (response.status === 204 || response.status === 205) return undefined as T;
+  const responseBody = await response.text();
+  if (!responseBody) return undefined as T;
+  return JSON.parse(responseBody) as T;
 }
 
 export const api = {
