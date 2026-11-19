@@ -1,7 +1,7 @@
 import { OwnerData } from './owner';
 
 export interface OwnerRepository {
-  save(datos: OwnerData): Promise<OwnerData>;
+  save(data: OwnerData): Promise<OwnerData>;
   findById(id: string): Promise<OwnerData | null>;
   list(): Promise<OwnerData[]>;
   delete(id: string): Promise<boolean>;

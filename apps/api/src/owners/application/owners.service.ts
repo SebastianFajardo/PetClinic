@@ -41,7 +41,7 @@ export class OwnersService {
 
   async getById(id: string): Promise<OwnerData> {
     const owner = await this.repository.findById(id);
-    if (!owner) throw new NotFoundException('No se encontró el owner');
+    if (!owner) throw new NotFoundException('Owner was not found');
     return owner;
   }
 
@@ -70,10 +70,10 @@ export class OwnersService {
 
   private async validateUniqueness(documentNumber: string, email: string, excludedId?: string): Promise<void> {
     if (await this.repository.existsByDocumentNumber(documentNumber, excludedId)) {
-      throw new ConflictException('Ya existe un owner con ese documentNumber');
+      throw new ConflictException('An owner with this document number already exists');
     }
     if (await this.repository.existsByEmail(email, excludedId)) {
-      throw new ConflictException('Ya existe un owner con ese email');
+      throw new ConflictException('An owner with this email already exists');
     }
   }
 }

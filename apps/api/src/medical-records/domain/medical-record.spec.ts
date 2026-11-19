@@ -1,7 +1,7 @@
 import { MedicalRecord } from './medical-record';
 
 describe('MedicalRecord', () => {
-  const datos = {
+  const data = {
     id: 'a66bdfad-0b10-4b4c-8d61-8c9acddab2c1',
     petId: 'b66bdfad-0b10-4b4c-8d61-8c9acddab2c1',
     veterinarianName: 'Diana Rojas',
@@ -15,14 +15,14 @@ describe('MedicalRecord', () => {
   };
 
   it('creates a medical record with valid data', () => {
-    expect(MedicalRecord.create(datos).toData()).toEqual(datos);
+    expect(MedicalRecord.create(data).toData()).toEqual(data);
   });
 
   it('rejects a missing veterinarian name', () => {
-    expect(() => MedicalRecord.create({ ...datos, veterinarianName: ' ' })).toThrow('El name del veterinario es obligatorio');
+    expect(() => MedicalRecord.create({ ...data, veterinarianName: ' ' })).toThrow('El name del veterinario es obligatorio');
   });
 
   it('rejects a missing diagnosis', () => {
-    expect(() => MedicalRecord.create({ ...datos, diagnosis: ' ' })).toThrow('El diagnóstico es obligatorio');
+    expect(() => MedicalRecord.create({ ...data, diagnosis: ' ' })).toThrow('El diagnóstico es obligatorio');
   });
 });

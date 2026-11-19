@@ -9,8 +9,8 @@ import { MedicalRecordOrm } from './medical-record.orm-entity';
 export class MedicalRecordTypeOrmRepository implements MedicalRecordRepository {
   constructor(@InjectRepository(MedicalRecordOrm) private readonly repository: Repository<MedicalRecordOrm>) {}
 
-  async save(datos: MedicalRecordData): Promise<MedicalRecordData> {
-    return this.repository.save(this.repository.create(datos));
+  async save(data: MedicalRecordData): Promise<MedicalRecordData> {
+    return this.repository.save(this.repository.create(data));
   }
 
   async findById(id: string): Promise<MedicalRecordData | null> {

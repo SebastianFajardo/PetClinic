@@ -1,4 +1,4 @@
-import { ReglaNegocioError } from '../../compartido/domain/regla-negocio.error';
+import { BusinessRuleError } from '../../compartido/domain/regla-negocio.error';
 
 export interface MedicalRecordData {
   id: string;
@@ -14,20 +14,20 @@ export interface MedicalRecordData {
 }
 
 export class MedicalRecord {
-  private constructor(private readonly datos: MedicalRecordData) {}
+  private constructor(private readonly data: MedicalRecordData) {}
 
-  static create(datos: MedicalRecordData): MedicalRecord {
-    if (!datos.petId.trim()) throw new ReglaNegocioError('La pet es obligatoria');
-    if (!datos.veterinarianName.trim()) throw new ReglaNegocioError('El name del veterinario es obligatorio');
-    if (!datos.reason.trim()) throw new ReglaNegocioError('El reason de consulta es obligatorio');
-    if (!datos.symptoms.trim()) throw new ReglaNegocioError('Los síntomas son obligatorios');
-    if (!datos.diagnosis.trim()) throw new ReglaNegocioError('El diagnóstico es obligatorio');
-    if (!datos.treatment.trim()) throw new ReglaNegocioError('El treatment es obligatorio');
-    if (Number.isNaN(datos.recordedAt.getTime())) throw new ReglaNegocioError('La date de consulta no es válida');
-    return new MedicalRecord(datos);
+  static create(data: MedicalRecordData): MedicalRecord {
+    if (!data.petId.trim()) throw new BusinessRuleError('La pet es obligatoria');
+    if (!data.veterinarianName.trim()) throw new BusinessRuleError('El name del veterinario es obligatorio');
+    if (!data.reason.trim()) throw new BusinessRuleError('El reason de consulta es obligatorio');
+    if (!data.symptoms.trim()) throw new BusinessRuleError('Los síntomas son obligatorios');
+    if (!data.diagnosis.trim()) throw new BusinessRuleError('El diagnóstico es obligatorio');
+    if (!data.treatment.trim()) throw new BusinessRuleError('El treatment es obligatorio');
+    if (Number.isNaN(data.recordedAt.getTime())) throw new BusinessRuleError('La date de consulta no es válida');
+    return new MedicalRecord(data);
   }
 
   toData(): MedicalRecordData {
-    return { ...this.datos };
+    return { ...this.data };
   }
 }
