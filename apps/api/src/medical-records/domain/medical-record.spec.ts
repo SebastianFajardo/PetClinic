@@ -19,10 +19,10 @@ describe('MedicalRecord', () => {
   });
 
   it('rejects a missing veterinarian name', () => {
-    expect(() => MedicalRecord.create({ ...data, veterinarianName: ' ' })).toThrow('El name del veterinario es obligatorio');
+    expect(() => MedicalRecord.create({ ...data, veterinarianName: ' ' })).toThrow('Veterinarian name is required');
   });
 
   it('rejects a missing diagnosis', () => {
-    expect(() => MedicalRecord.create({ ...data, diagnosis: ' ' })).toThrow('El diagnóstico es obligatorio');
+    expect(() => MedicalRecord.create({ ...data, diagnosis: ' ' })).toThrow('Diagnosis is required');
   });
 });
