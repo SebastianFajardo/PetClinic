@@ -3,11 +3,12 @@ import { AppointmentsPage } from './features/appointments/AppointmentsPage';
 import { MedicalRecordsPage } from './features/medical-records/MedicalRecordsPage';
 import { TreatmentsPage } from './features/treatments/TreatmentsPage';
 import { InventoryPage } from './features/inventory/InventoryPage';
+import { ReportsPage } from './features/reports/ReportsPage';
 import type { Owner, Pet } from './types';
 import { AuthPage } from './features/auth/AuthPage';
 import { api, sessionStorage, type AuthSession, type AuthUser } from './services/api';
 
-type Section = 'overview' | 'owners' | 'pets' | 'appointments' | 'medical-records' | 'treatments' | 'inventory';
+type Section = 'overview' | 'owners' | 'pets' | 'appointments' | 'medical-records' | 'treatments' | 'inventory' | 'reports';
 type RequestState = 'loading' | 'ready' | 'error';
 
 const speciesLabels: Record<Pet['species'], string> = {
@@ -123,6 +124,9 @@ function Dashboard({ user, onLogout }: { user: AuthUser; onLogout: () => void })
           {['admin', 'veterinarian', 'assistant'].includes(user.role) && <button className={section === 'inventory' ? 'nav-item active' : 'nav-item'} onClick={() => setSection('inventory')}>
             <span>▤</span> Inventario
           </button>}
+          <button className={section === 'reports' ? 'nav-item active' : 'nav-item'} onClick={() => setSection('reports')}>
+            <span>▥</span> Reportes
+          </button>
         </nav>
         <div className="sidebar-footer">
           <span className={apiConnected ? 'connection-dot online' : 'connection-dot'} />
@@ -134,7 +138,7 @@ function Dashboard({ user, onLogout }: { user: AuthUser; onLogout: () => void })
         <header className="topbar">
           <div>
             <span className="eyebrow">PLATAFORMA DE GESTIÓN VETERINARIA</span>
-            <h1>{section === 'overview' ? 'Resumen general' : section === 'owners' ? 'Propietarios' : section === 'pets' ? 'Mascotas' : section === 'appointments' ? 'Citas' : section === 'medical-records' ? 'Historias clínicas' : section === 'treatments' ? 'Tratamientos y controles' : 'Inventario y movimientos'}</h1>
+            <h1>{section === 'overview' ? 'Resumen general' : section === 'owners' ? 'Propietarios' : section === 'pets' ? 'Mascotas' : section === 'appointments' ? 'Citas' : section === 'medical-records' ? 'Historias clínicas' : section === 'treatments' ? 'Tratamientos y controles' : section === 'inventory' ? 'Inventario y movimientos' : 'Reportes e indicadores'}</h1>
           </div>
           <div className="account-actions"><div className="account-identity"><strong>{user.name}</strong><span>{user.role}</span></div><button className="secondary-button" onClick={onLogout}>Cerrar sesión</button><button className="refresh-button" onClick={() => void loadData()} aria-label="Actualizar información">↻</button></div>
         </header>
@@ -196,6 +200,8 @@ function Dashboard({ user, onLogout }: { user: AuthUser; onLogout: () => void })
         {requestState === 'ready' && section === 'treatments' && ['admin', 'veterinarian', 'assistant'].includes(user.role) && <TreatmentsPage pets={pets} />}
 
         {requestState === 'ready' && section === 'inventory' && ['admin', 'veterinarian', 'assistant'].includes(user.role) && <InventoryPage />}
+
+        {requestState === 'ready' && section === 'reports' && <ReportsPage />
 
         {requestState === 'ready' && section === 'pets' && (
           <section className="content-card">
