@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CitasModule } from './citas/citas.module';
 import { EstadoController } from './estado/infraestructura/estado.controller';
+import { HistoriasClinicasModule } from './historias-clinicas/historias-clinicas.module';
 import { MascotasModule } from './mascotas/mascotas.module';
 import { PropietariosModule } from './propietarios/propietarios.module';
 
@@ -24,6 +26,8 @@ import { PropietariosModule } from './propietarios/propietarios.module';
     }),
     PropietariosModule,
     MascotasModule,
+    HistoriasClinicasModule,
+    CitasModule,
   ],
   controllers: [EstadoController],
 })
