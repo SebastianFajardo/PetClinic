@@ -105,3 +105,15 @@ td strong { color: #29475a; font-weight: 600; }
 .success-banner { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; padding: 13px 16px; border-radius: 9px; background: #eaf6ef; color: #28785e; font-size: 12px; }
 .inventory-current-stock { margin: 0; color: #657986; font-size: 12px; }
 @media (max-width: 650px) { .inventory-summary { grid-template-columns: 1fr; } .inventory-actions { width: 100%; } }
+
+.inventory-actions { display: flex; flex-wrap: wrap; gap: 9px; }
+.inventory-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 22px 0 28px; }
+.inventory-summary .stat-card { padding: 17px 20px; }
+.inventory-summary .stat-card strong { font-size: 25px; }
+.inventory-subheading { margin: 28px 0 12px; }
+.stock-status { display: inline-flex; padding: 5px 9px; border-radius: 20px; font-size: 10px; font-weight: 700; }
+.stock-status.low { background: #fff0e8; color: #a85b35; }
+.stock-status.healthy { background: #e8f5ef; color: #28785e; }
+.success-banner { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; padding: 13px 16px; border-radius: 9px; background: #eaf6ef; color: #28785e; font-size: 12px; }
+.inventory-current-stock { margin: 0; color: #657986; font-size: 12px; }
+@media (max-width: 650px) { .inventory-summary { grid-template-columns: 1fr; } .inventory-actions { width: 100%; } }
