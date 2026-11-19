@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn, UpdateDateColumn } from 'typeorm';
-import { MascotaOrm } from '../../mascotas/infrastructure/mascota.orm-entity';
+import { MascotaOrm } from '../../pets/infrastructure/pet.orm-entity';
 
 @Entity({ name: 'appointments' })
 @Index('IDX_appointments_pet_scheduled_at', ['petId', 'dateTime'])
@@ -12,7 +12,7 @@ export class AppointmentOrm {
 
   @ManyToOne(() => MascotaOrm, { onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'pet_id' })
-  mascota!: MascotaOrm;
+  pet!: MascotaOrm;
 
   @Column({ name: 'scheduled_at', type: 'timestamptz' })
   dateTime!: Date;
@@ -27,7 +27,7 @@ export class AppointmentOrm {
   status!: string;
 
   @Column({ name: 'notes', type: 'text', nullable: true })
-  observaciones!: string | null;
+  notes!: string | null;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt!: Date;

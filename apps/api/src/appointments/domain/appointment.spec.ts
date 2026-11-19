@@ -14,7 +14,7 @@ describe('Appointment', () => {
   };
 
   it('creates an appointment with valid data', () => {
-    expect(Appointment.create(datos).obtenerDatos()).toEqual(datos);
+    expect(Appointment.create(datos).toData()).toEqual(datos);
   });
 
   it('rejects a duration outside the allowed range', () => {

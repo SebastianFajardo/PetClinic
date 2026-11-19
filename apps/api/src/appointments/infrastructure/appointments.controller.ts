@@ -1,7 +1,7 @@
-import { Roles } from '../../autenticacion/infrastructure/roles.decorator';
+import { Roles } from '../../authentication/infrastructure/roles.decorator';
 import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { IsDateString, IsIn, IsInt, IsOptional, IsString, IsUUID, Max, MaxLength, Min, MinLength } from 'class-validator';
-import { AppointmentsServicio, CreateAppointment } from '../aplicacion/appointments.service';
+import { AppointmentsService, CreateAppointment } from '../application/appointments.service';
 import { AppointmentStatus } from '../domain/appointment';
 
 class CreateAppointmentDto implements CreateAppointment {
@@ -23,10 +23,10 @@ class CreateAppointmentDto implements CreateAppointment {
 
   @IsOptional()
   @IsString()
-  observaciones?: string;
+  notes?: string;
 }
 
-class CambiarAppointmentStatusDto {
+class UpdateAppointmentStatusDto {
   @IsIn(['scheduled', 'confirmed', 'completed', 'cancelled', 'no_show'])
   status!: AppointmentStatus;
 }
@@ -34,7 +34,7 @@ class CambiarAppointmentStatusDto {
 @Controller('appointments')
 @Roles('admin', 'veterinarian', 'assistant', 'receptionist')
 export class AppointmentsController {
-  constructor(private readonly service: AppointmentsServicio) {}
+  constructor(private readonly service: AppointmentsService) {}
 
   @Post()
   create(@Body() input: CreateAppointmentDto) {
@@ -52,7 +52,7 @@ export class AppointmentsController {
   }
 
   @Patch(':id/status')
-  updateStatus(@Param('id', ParseUUIDPipe) id: string, @Body() input: CambiarAppointmentStatusDto) {
+  updateStatus(@Param('id', ParseUUIDPipe) id: string, @Body() input: UpdateAppointmentStatusDto) {
     return this.service.updateStatus(id, input.status);
   }
 }
