@@ -25,13 +25,13 @@ export function MedicalRecordsPage({ pets }: { pets: Pet[] }) {
     const form = new FormData(event.currentTarget);
     try {
       await api.medicalRecords.create({
-        mascotaId: String(form.get('petId')),
-        nombreVeterinario: String(form.get('veterinarian')),
-        motivoConsulta: String(form.get('reason')),
-        sintomas: String(form.get('symptoms')),
-        diagnostico: String(form.get('diagnosis')),
-        tratamiento: String(form.get('treatment')),
-        observaciones: String(form.get('notes')),
+        petId: String(form.get('petId')),
+        veterinarianName: String(form.get('veterinarian')),
+        reason: String(form.get('reason')),
+        symptoms: String(form.get('symptoms')),
+        diagnosis: String(form.get('diagnosis')),
+        treatment: String(form.get('treatment')),
+        notes: String(form.get('notes')),
       });
       setShowForm(false);
       await loadRecords();
@@ -61,7 +61,7 @@ export function MedicalRecordsPage({ pets }: { pets: Pet[] }) {
         <div className="form-actions"><button className="primary-button" type="submit">Guardar historia clínica</button><button className="secondary-button" type="button" onClick={() => setShowForm(false)}>Cancelar</button></div>
       </form>}
       <div className="table-wrap"><table><thead><tr><th>Fecha</th><th>Mascota</th><th>Veterinario</th><th>Motivo</th><th>Diagnóstico</th><th>Tratamiento</th></tr></thead><tbody>
-        {records.map(record => <tr key={record.id}><td>{new Date(record.registradaEn).toLocaleDateString()}</td><td><strong>{petNames.get(record.mascotaId) ?? 'Mascota'}</strong></td><td>{record.nombreVeterinario}</td><td>{record.motivoConsulta}</td><td>{record.diagnostico}</td><td>{record.tratamiento}</td></tr>)}
+        {records.map(record => <tr key={record.id}><td>{new Date(record.recordedAt).toLocaleDateString()}</td><td><strong>{petNames.get(record.petId) ?? 'Mascota'}</strong></td><td>{record.veterinarianName}</td><td>{record.reason}</td><td>{record.diagnosis}</td><td>{record.treatment}</td></tr>)}
       </tbody></table>{records.length === 0 && <p className="table-empty">Todavía no hay historias clínicas registradas.</p>}</div>
     </section>
   );

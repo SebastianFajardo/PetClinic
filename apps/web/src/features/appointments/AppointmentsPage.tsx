@@ -1,8 +1,8 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { api } from '../../services/api';
-import type { Appointment, Pet } from '../../types';
+import type { Appointment, AppointmentStatus, Pet } from '../../types';
 
-const statusLabels: Record<Appointment['estado'], string> = {
+const statusLabels: Record<AppointmentStatus, string> = {
   scheduled: 'Programada',
   confirmed: 'Confirmada',
   completed: 'Completada',
@@ -33,11 +33,11 @@ export function AppointmentsPage({ pets }: { pets: Pet[] }) {
     const form = new FormData(event.currentTarget);
     try {
       await api.appointments.create({
-        mascotaId: String(form.get('petId')),
-        fechaHora: new Date(String(form.get('scheduledAt'))).toISOString(),
-        duracionMinutos: Number(form.get('duration')),
-        motivo: String(form.get('reason')),
-        observaciones: String(form.get('notes')),
+        petId: String(form.get('petId')),
+        dateTime: new Date(String(form.get('scheduledAt'))).toISOString(),
+        durationMinutes: Number(form.get('duration')),
+        reason: String(form.get('reason')),
+        notes: String(form.get('notes')),
       });
       setShowForm(false);
       await loadAppointments();
@@ -46,9 +46,9 @@ export function AppointmentsPage({ pets }: { pets: Pet[] }) {
     }
   }
 
-  async function changeStatus(id: string, estado: Appointment['estado']) {
+  async function changeStatus(id: string, status: AppointmentStatus) {
     try {
-      await api.appointments.updateStatus(id, estado);
+      await api.appointments.updateStatus(id, status);
       await loadAppointments();
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'No fue posible actualizar la cita');
@@ -75,12 +75,12 @@ export function AppointmentsPage({ pets }: { pets: Pet[] }) {
       </form>}
       <div className="table-wrap"><table><thead><tr><th>Fecha</th><th>Mascota</th><th>Motivo</th><th>Duración</th><th>Estado</th><th>Acción</th></tr></thead><tbody>
         {appointments.map(appointment => <tr key={appointment.id}>
-          <td>{new Date(appointment.fechaHora).toLocaleString()}</td>
-          <td><strong>{petNames.get(appointment.mascotaId) ?? 'Mascota'}</strong></td>
-          <td>{appointment.motivo}</td>
-          <td>{appointment.duracionMinutos} min</td>
-          <td>{statusLabels[appointment.estado]}</td>
-          <td>{['scheduled', 'confirmed'].includes(appointment.estado) && <select aria-label="Cambiar estado" value={appointment.estado} onChange={event => void changeStatus(appointment.id, event.target.value as Appointment['estado'])}>
+          <td>{new Date(appointment.dateTime).toLocaleString()}</td>
+          <td><strong>{petNames.get(appointment.petId) ?? 'Mascota'}</strong></td>
+          <td>{appointment.reason}</td>
+          <td>{appointment.durationMinutes} min</td>
+          <td>{statusLabels[appointment.status]}</td>
+          <td>{['scheduled', 'confirmed'].includes(appointment.status) && <select aria-label="Cambiar estado" value={appointment.status} onChange={event => void changeStatus(appointment.id, event.target.value as AppointmentStatus)}>
             <option value="scheduled">Programada</option><option value="confirmed">Confirmada</option><option value="completed">Completada</option><option value="cancelled">Cancelada</option><option value="no_show">No asistió</option>
           </select>}</td>
         </tr>)}

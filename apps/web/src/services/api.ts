@@ -1,4 +1,4 @@
-import type { Appointment, AppointmentInput, MedicalRecord, MedicalRecordInput, Owner, OwnerInput, Pet, PetInput } from '../types';
+import type { Appointment, AppointmentInput, AppointmentStatus, MedicalRecord, MedicalRecordInput, Owner, OwnerInput, Pet, PetInput } from '../types';
 
 const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api/v1';
 const tokenKey = 'petclinic_access_token';
@@ -63,8 +63,8 @@ export const api = {
   appointments: {
     list: () => request<Appointment[]>('/appointments'),
     create: (input: AppointmentInput) => request<Appointment>('/appointments', { method: 'POST', body: JSON.stringify(input) }),
-    updateStatus: (id: string, estado: Appointment['estado']) =>
-      request<Appointment>(`/appointments/${id}/status`, { method: 'PATCH', body: JSON.stringify({ estado }) }),
+    updateStatus: (id: string, status: AppointmentStatus) =>
+      request<Appointment>(`/appointments/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }),
   },
   medicalRecords: {
     list: () => request<MedicalRecord[]>('/medical-records'),

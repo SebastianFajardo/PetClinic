@@ -46,46 +46,48 @@ export interface PetInput {
   notes?: string;
 }
 
+export type AppointmentStatus = 'scheduled' | 'confirmed' | 'completed' | 'cancelled' | 'no_show';
+
 export interface Appointment {
   id: string;
-  mascotaId: string;
-  fechaHora: string;
-  duracionMinutos: number;
-  motivo: string;
-  estado: 'scheduled' | 'confirmed' | 'completed' | 'cancelled' | 'no_show';
-  observaciones: string | null;
-  creadaEn: string;
-  actualizadaEn: string;
+  petId: string;
+  dateTime: string;
+  durationMinutes: number;
+  reason: string;
+  status: AppointmentStatus;
+  notes: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface AppointmentInput {
-  mascotaId: string;
-  fechaHora: string;
-  duracionMinutos: number;
-  motivo: string;
-  observaciones?: string;
+  petId: string;
+  dateTime: string;
+  durationMinutes: number;
+  reason: string;
+  notes?: string;
 }
 
 export interface MedicalRecord {
   id: string;
-  mascotaId: string;
-  nombreVeterinario: string;
-  motivoConsulta: string;
-  sintomas: string;
-  diagnostico: string;
-  tratamiento: string;
-  observaciones: string | null;
-  registradaEn: string;
-  creadaEn: string;
+  petId: string;
+  veterinarianName: string;
+  reason: string;
+  symptoms: string;
+  diagnosis: string;
+  treatment: string;
+  notes: string | null;
+  recordedAt: string;
+  createdAt: string;
 }
 
 export interface MedicalRecordInput {
-  mascotaId: string;
-  nombreVeterinario: string;
-  motivoConsulta: string;
-  sintomas: string;
-  diagnostico: string;
-  tratamiento: string;
-  observaciones?: string;
-  registradaEn?: string;
+  petId: string;
+  veterinarianName: string;
+  reason: string;
+  symptoms: string;
+  diagnosis: string;
+  treatment: string;
+  notes?: string;
+  recordedAt?: string;
 }
