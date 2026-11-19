@@ -11,7 +11,8 @@ async function bootstrap(): Promise<void> {
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true, forbidNonWhitelisted: true }));
   app.useGlobalFilters(new ReglaNegocioFiltro());
-  await app.listen(configuracion.get<number>('API_PORT', 3000));
+  const puerto = Number(configuracion.get<string>('API_PORT', '3000'));
+  await app.listen(puerto);
 }
 
 void bootstrap();
