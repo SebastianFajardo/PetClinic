@@ -10,8 +10,8 @@ import { OwnersController } from './infrastructure/owners.controller';
   controllers: [OwnersController],
   providers: [
     OwnersService,
-    { provide: 'OwnerRepositorio', useClass: OwnerTypeOrmRepository },
+    { provide: 'OwnerRepository', useClass: OwnerTypeOrmRepository },
   ],
-  exports: ['OwnerRepositorio'],
+  exports: ['OwnerRepository'],
 })
 export class OwnersModule {}

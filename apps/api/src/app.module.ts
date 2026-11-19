@@ -4,7 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { resolve } from 'node:path';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthenticationModule } from './authentication/authentication.module';
-import { JwtAuthGuard } from './authentication/infrastructure/guards/acceso-jwt.guard';
+import { JwtAuthGuard } from './authentication/infrastructure/guards/jwt-auth.guard';
 import { RolesGuard } from './authentication/infrastructure/guards/roles.guard';
 import { AppointmentsModule } from './appointments/appointments.module';
 import { HealthController } from './health/infrastructure/health.controller';

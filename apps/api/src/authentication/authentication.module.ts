@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthenticationService } from './application/authentication.servicio';
+import { AuthenticationService } from './application/authentication.service';
 import { UserOrm } from './infrastructure/user.orm-entity';
-import { UserTypeOrmRepository } from './infrastructure/user.typeorm-repositorio';
+import { UserTypeOrmRepository } from './infrastructure/user.typeorm-repository';
 import { AuthenticationController } from './infrastructure/authentication.controller';
-import { JwtAuthGuard } from './infrastructure/guards/acceso-jwt.guard';
+import { JwtAuthGuard } from './infrastructure/guards/jwt-auth.guard';
 import { RolesGuard } from './infrastructure/guards/roles.guard';
 
 @Module({
