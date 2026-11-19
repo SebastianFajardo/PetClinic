@@ -72,7 +72,7 @@ apps/
    npm run dev:web
    ```
 
-The web application uses `http://localhost:3000/api/v1` by default. Configure `VITE_API_URL` when the API runs at another address.
+The web application uses `http://localhost:3000/api/v1` by default. Configure `VITE_API_URL` when the API runs at another address. The login screen stores the access token in browser local storage, restores the session through `GET /auth/me` and sends the bearer token on protected API requests. Use the logout action to clear the local session.
 
 ## Authentication and roles
 
@@ -146,4 +146,4 @@ Appointment states are `scheduled`, `confirmed`, `completed`, `cancelled` and `n
 
 The current increment includes owner and pet management, clinical records, appointment scheduling, JWT authentication, role-based authorization infrastructure, PostgreSQL mappings, database migrations, domain unit tests and initial web screens for the management areas.
 
-Treatments as a separate module, inventory, reporting, reminders and frontend authentication integration remain pending. The project is an academic prototype in progress. It has not been validated as a production or TRL5 system.
+Treatments as a separate module, inventory, reporting and reminders remain pending. The project is an academic prototype in progress. It has not been validated as a production or TRL5 system.
