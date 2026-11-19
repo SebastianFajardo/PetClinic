@@ -29,12 +29,12 @@ export class AppointmentTypeOrmRepository implements AppointmentRepository {
   }
 
   async hasOverlap(petId: string, start: Date, end: Date, excludedId?: string): Promise<boolean> {
-    const consulta = this.repository.createQueryBuilder('appointment')
-      .where('appointment.pet_id = :petId', { petId })
-      .andWhere('appointment.status IN (:...estados)', { estados: ['scheduled', 'confirmed'] })
-      .andWhere('appointment.scheduled_at < :end', { end })
-      .andWhere("appointment.scheduled_at + (appointment.duration_minutes * interval '1 minute') > :start", { start });
-    if (excludedId) consulta.andWhere('appointment.id != :excludedId', { excludedId });
-    return consulta.getExists();
+    const query = this.repository.createQueryBuilder('appointment')
+      .where('appointment.petId = :petId', { petId })
+      .andWhere('appointment.status IN (:...statuses)', { statuses: ['scheduled', 'confirmed'] })
+      .andWhere('appointment.dateTime < :end', { end })
+      .andWhere("appointment.dateTime + (appointment.durationMinutes * interval '1 minute') > :start", { start });
+    if (excludedId) query.andWhere('appointment.id != :excludedId', { excludedId });
+    return query.getExists();
   }
 }

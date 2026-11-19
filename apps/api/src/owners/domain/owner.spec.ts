@@ -4,7 +4,7 @@ describe('Owner', () => {
   const data = {
     id: 'a66bdfad-0b10-4b4c-8d61-8c9acddab2c1',
     name: 'Laura',
-    lastName: 'Gómez',
+    lastName: 'Gomez',
     documentNumber: '123456789',
     email: 'laura@example.com',
     phone: '3001234567',

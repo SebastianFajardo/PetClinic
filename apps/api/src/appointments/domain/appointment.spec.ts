@@ -6,7 +6,7 @@ describe('Appointment', () => {
     petId: 'b66bdfad-0b10-4b4c-8d61-8c9acddab2c1',
     dateTime: new Date('2026-12-01T14:00:00.000Z'),
     durationMinutes: 30,
-    reason: 'Control general',
+    reason: 'General checkup',
     status: 'scheduled' as const,
     notes: null,
     createdAt: new Date('2026-11-01T00:00:00.000Z'),
@@ -18,10 +18,10 @@ describe('Appointment', () => {
   });
 
   it('rejects a duration outside the allowed range', () => {
-    expect(() => Appointment.create({ ...data, durationMinutes: 5 })).toThrow('La duración debe estar entre 15 y 240 minutos');
+    expect(() => Appointment.create({ ...data, durationMinutes: 5 })).toThrow('Duration must be between 15 and 240 minutes');
   });
 
   it('rejects an empty reason', () => {
-    expect(() => Appointment.create({ ...data, reason: ' ' })).toThrow('El reason de the appointment es obligatorio');
+    expect(() => Appointment.create({ ...data, reason: ' ' })).toThrow('The appointment reason is required');
   });
 });
