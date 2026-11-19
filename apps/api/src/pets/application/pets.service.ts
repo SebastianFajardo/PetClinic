@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
-import { OwnerRepositorio } from '../../propietarios/domain/owner.repository';
+import { OwnerRepository } from '../../propietarios/domain/owner.repository';
 import { PetData, PetSpecies, Pet, PetSex } from '../domain/pet';
 import { PetRepository } from '../domain/pet.repository';
 
@@ -13,14 +13,14 @@ export interface CrearPet {
   sex?: PetSex;
   color?: string;
   pesoKg?: number;
-  notas?: string;
+  notes?: string;
 }
 
 @Injectable()
 export class PetsService {
   constructor(
     @Inject('PetRepository') private readonly repository: PetRepository,
-    @Inject('OwnerRepositorio') private readonly propietarios: OwnerRepositorio,
+    @Inject('OwnerRepository') private readonly propietarios: OwnerRepository,
   ) {}
 
   async create(input: CrearPet): Promise<PetData> {
@@ -37,7 +37,7 @@ export class PetsService {
       sex: input.sex ?? 'unknown',
       color: input.color?.trim() || null,
       pesoKg: input.pesoKg ?? null,
-      notas: input.notas?.trim() || null,
+      notes: input.notes?.trim() || null,
       createdAt: now,
       updatedAt: now,
     });
@@ -76,7 +76,7 @@ export class PetsService {
       sex: input.sex ?? actual.sex,
       color: input.color === undefined ? actual.color : input.color.trim() || null,
       pesoKg: input.pesoKg ?? actual.pesoKg,
-      notas: input.notas === undefined ? actual.notas : input.notas.trim() || null,
+      notes: input.notes === undefined ? actual.notes : input.notes.trim() || null,
       updatedAt: new Date(),
     }).obtenerDatos());
   }

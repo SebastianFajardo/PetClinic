@@ -13,12 +13,12 @@ class CrearPetDto implements CrearPet {
   name!: string;
 
   @IsIn(['dog', 'cat', 'bird', 'other'])
-  especie!: 'dog' | 'cat' | 'bird' | 'other';
+  species!: 'dog' | 'cat' | 'bird' | 'other';
 
   @IsOptional()
   @IsString()
   @MaxLength(100)
-  raza?: string;
+  breed?: string;
 
   @IsOptional()
   @IsDateString()
@@ -26,7 +26,7 @@ class CrearPetDto implements CrearPet {
 
   @IsOptional()
   @IsIn(['male', 'female', 'unknown'])
-  sexo?: 'male' | 'female' | 'unknown';
+  sex?: 'male' | 'female' | 'unknown';
 
   @IsOptional()
   @IsString()
@@ -42,7 +42,7 @@ class CrearPetDto implements CrearPet {
   @IsOptional()
   @IsString()
   @MaxLength(2000)
-  notas?: string;
+  notes?: string;
 }
 
 class ActualizarPetDto {
@@ -58,12 +58,12 @@ class ActualizarPetDto {
 
   @IsOptional()
   @IsIn(['dog', 'cat', 'bird', 'other'])
-  especie?: 'dog' | 'cat' | 'bird' | 'other';
+  species?: 'dog' | 'cat' | 'bird' | 'other';
 
   @IsOptional()
   @IsString()
   @MaxLength(100)
-  raza?: string;
+  breed?: string;
 
   @IsOptional()
   @IsDateString()
@@ -71,7 +71,7 @@ class ActualizarPetDto {
 
   @IsOptional()
   @IsIn(['male', 'female', 'unknown'])
-  sexo?: 'male' | 'female' | 'unknown';
+  sex?: 'male' | 'female' | 'unknown';
 
   @IsOptional()
   @IsString()
@@ -87,7 +87,7 @@ class ActualizarPetDto {
   @IsOptional()
   @IsString()
   @MaxLength(2000)
-  notas?: string;
+  notes?: string;
 }
 
 @Controller('pets')

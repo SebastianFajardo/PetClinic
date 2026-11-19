@@ -36,7 +36,7 @@ export class PetOrm {
   pesoKg!: number | null;
 
   @Column({ name: 'notes', type: 'text', nullable: true })
-  notas!: string | null;
+  notes!: string | null;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt!: Date;

@@ -11,7 +11,7 @@ describe('Pet', () => {
     sex: 'female' as const,
     color: 'Blanco',
     pesoKg: 4.2,
-    notas: null,
+    notes: null,
     createdAt: new Date('2026-01-01T00:00:00.000Z'),
     updatedAt: new Date('2026-01-01T00:00:00.000Z'),
   };

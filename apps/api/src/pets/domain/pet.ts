@@ -13,7 +13,7 @@ export interface PetData {
   sex: PetSex;
   color: string | null;
   pesoKg: number | null;
-  notas: string | null;
+  notes: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
