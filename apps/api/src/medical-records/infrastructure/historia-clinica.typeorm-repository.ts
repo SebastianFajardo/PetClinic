@@ -18,10 +18,10 @@ export class MedicalRecordTypeOrmRepository implements MedicalRecordRepository {
   }
 
   async list(): Promise<MedicalRecordData[]> {
-    return this.repository.find({ order: { registradaEn: 'DESC' } });
+    return this.repository.find({ order: { recordedAt: 'DESC' } });
   }
 
-  async listarPorPet(mascotaId: string): Promise<MedicalRecordData[]> {
-    return this.repository.find({ where: { mascotaId }, order: { registradaEn: 'DESC' } });
+  async listarPorPet(petId: string): Promise<MedicalRecordData[]> {
+    return this.repository.find({ where: { petId }, order: { recordedAt: 'DESC' } });
   }
 }

@@ -2,13 +2,13 @@ import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, Primary
 import { PetOrm } from '../../pets/infrastructure/pet.orm-entity';
 
 @Entity({ name: 'medical_records' })
-@Index('IDX_medical_records_pet_recorded_at', ['mascotaId', 'registradaEn'])
+@Index('IDX_medical_records_pet_recorded_at', ['petId', 'recordedAt'])
 export class MedicalRecordOrm {
   @PrimaryColumn('uuid')
   id!: string;
 
   @Column({ name: 'pet_id', type: 'uuid' })
-  mascotaId!: string;
+  petId!: string;
 
   @ManyToOne(() => PetOrm, { onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'pet_id' })
@@ -24,16 +24,16 @@ export class MedicalRecordOrm {
   sintomas!: string;
 
   @Column({ name: 'diagnosis', type: 'text' })
-  diagnostico!: string;
+  diagnosis!: string;
 
   @Column({ name: 'treatment', type: 'text' })
-  tratamiento!: string;
+  treatment!: string;
 
   @Column({ name: 'notes', type: 'text', nullable: true })
-  observaciones!: string | null;
+  notes!: string | null;
 
   @Column({ name: 'recorded_at', type: 'timestamptz' })
-  registradaEn!: Date;
+  recordedAt!: Date;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt!: Date;

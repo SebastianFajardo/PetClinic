@@ -1,11 +1,11 @@
 import { Roles } from '../../autenticacion/infrastructure/roles.decorator';
 import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { IsDateString, IsOptional, IsString, IsUUID, MaxLength, MinLength } from 'class-validator';
-import { CrearMedicalRecord, HistoriasClinicasServicio } from '../application/medical-records.service';
+import { CrearMedicalRecord, MedicalRecordsService } from '../application/medical-records.service';
 
 class CrearMedicalRecordDto implements CrearMedicalRecord {
   @IsUUID()
-  mascotaId!: string;
+  petId!: string;
 
   @IsString()
   @MinLength(2)
@@ -23,25 +23,25 @@ class CrearMedicalRecordDto implements CrearMedicalRecord {
 
   @IsString()
   @MinLength(2)
-  diagnostico!: string;
+  diagnosis!: string;
 
   @IsString()
   @MinLength(2)
-  tratamiento!: string;
+  treatment!: string;
 
   @IsOptional()
   @IsString()
-  observaciones?: string;
+  notes?: string;
 
   @IsOptional()
   @IsDateString()
-  registradaEn?: string;
+  recordedAt?: string;
 }
 
 @Controller('medical-records')
 @Roles('admin', 'veterinarian')
 export class MedicalRecordsController {
-  constructor(private readonly service: HistoriasClinicasServicio) {}
+  constructor(private readonly service: MedicalRecordsService) {}
 
   @Post()
   create(@Body() input: CrearMedicalRecordDto) {
@@ -49,8 +49,8 @@ export class MedicalRecordsController {
   }
 
   @Get()
-  list(@Query('petId') mascotaId?: string) {
-    return this.service.list(mascotaId);
+  list(@Query('petId') petId?: string) {
+    return this.service.list(petId);
   }
 
   @Get(':id')

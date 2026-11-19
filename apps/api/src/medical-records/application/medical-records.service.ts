@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
-import { MascotaRepositorio } from '../../mascotas/domain/mascota.repository';
+import { PetRepository } from '../../mascotas/domain/mascota.repository';
 import { MedicalRecordData, MedicalRecord } from '../domain/medical-record';
 import { MedicalRecordRepository } from '../domain/medical-record.repository';
 
@@ -19,7 +19,7 @@ export interface CreateMedicalRecord {
 export class MedicalRecordsService {
   constructor(
     @Inject('MedicalRecordRepository') private readonly repository: MedicalRecordRepository,
-    @Inject('MascotaRepositorio') private readonly mascotas: MascotaRepositorio,
+    @Inject('PetRepository') private readonly mascotas: PetRepository,
   ) {}
 
   async create(input: CreateMedicalRecord): Promise<MedicalRecordData> {
