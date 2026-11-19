@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { InventoryItemData, InventoryMovementData, InventoryMovementType, InventoryRepository } from './inventory.domain';
@@ -31,12 +31,12 @@ export class InventoryTypeOrmRepository implements InventoryRepository {
       const itemRepository = manager.getRepository(InventoryItemOrm);
       const movementRepository = manager.getRepository(InventoryMovementOrm);
       const item = await itemRepository.findOne({ where: { id: input.itemId, isActive: true }, lock: { mode: 'pessimistic_write' } });
-      if (!item) throw new Error('Inventory item was not found');
+      if (!item) throw new NotFoundException('Inventory item was not found');
       const previousQuantity = Number(item.quantity);
       let newQuantity = previousQuantity;
       if (input.type === 'entry') newQuantity += input.quantity;
       if (input.type === 'exit') {
-        if (input.quantity > previousQuantity) throw new Error('Insufficient stock for this exit');
+        if (input.quantity > previousQuantity) throw new BadRequestException('Insufficient stock for this exit');
         newQuantity -= input.quantity;
       }
       if (input.type === 'adjustment') newQuantity = input.quantity;
