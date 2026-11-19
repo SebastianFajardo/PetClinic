@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { resolve } from 'node:path';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AutenticacionModule } from './autenticacion/autenticacion.module';
 import { AccesoJwtGuard } from './autenticacion/infraestructura/guards/acceso-jwt.guard';
@@ -13,7 +14,13 @@ import { PropietariosModule } from './propietarios/propietarios.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: [
+        resolve(__dirname, '../../../.env'),
+        resolve(__dirname, '../.env'),
+      ],
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
