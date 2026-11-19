@@ -64,7 +64,7 @@ export function InventoryPage() {
 
   return <section className="content-card">
     <div className="section-heading">
-      <div><h2>Inventario y movimientos</h2><p>{items.length} productos · {movements.length} movimientos recientes</p></div>
+      <div><h2>Inventario y movimientos</h2><p>{loading ? 'Actualizando existencias y movimientos...' : 'Control de existencias y trazabilidad de movimientos'}</p></div>
       <div className="inventory-actions">
         <button className="secondary-button" onClick={() => setShowMovementForm(!showMovementForm)} disabled={!items.length}>Registrar movimiento</button>
         <button className="primary-button" onClick={() => setShowItemForm(!showItemForm)}>+ Nuevo producto</button>
