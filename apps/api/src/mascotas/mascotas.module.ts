@@ -13,5 +13,6 @@ import { MascotasController } from './infraestructura/mascotas.controller';
     MascotasServicio,
     { provide: 'MascotaRepositorio', useClass: MascotaTypeOrmRepositorio },
   ],
+  exports: ['MascotaRepositorio'],
 })
 export class MascotasModule {}
