@@ -8,8 +8,8 @@ import { UserOrm } from './user.orm-entity';
 export class UserTypeOrmRepository {
   constructor(@InjectRepository(UserOrm) private readonly repository: Repository<UserOrm>) {}
 
-  async save(datos: DatosUser): Promise<DatosUser> {
-    return this.repository.save(this.repository.create(datos));
+  async save(data: DatosUser): Promise<DatosUser> {
+    return this.repository.save(this.repository.create(data));
   }
 
   async findByEmail(email: string): Promise<DatosUser | null> {
