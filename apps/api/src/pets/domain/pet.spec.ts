@@ -21,6 +21,6 @@ describe('Pet', () => {
   });
 
   it('rejects a non-positive weight', () => {
-    expect(() => Pet.create({ ...data, weightKg: 0 })).toThrow('El weight debe ser un número mayor que cero');
+    expect(() => Pet.create({ ...data, weightKg: 0 })).toThrow('Weight must be greater than zero');
   });
 });

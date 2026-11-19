@@ -1,4 +1,4 @@
-import { ReglaNegocioError } from '../../compartido/domain/regla-negocio.error';
+import { BusinessRuleError } from '../../shared/domain/business-rule.error';
 
 export type PetSpecies = 'dog' | 'cat' | 'bird' | 'other';
 export type PetSex = 'male' | 'female' | 'unknown';
@@ -22,10 +22,10 @@ export class Pet {
   private constructor(private readonly data: PetData) {}
 
   static create(data: PetData): Pet {
-    if (!data.name.trim()) throw new ReglaNegocioError('El name de la pet es obligatorio');
-    if (!data.ownerId.trim()) throw new ReglaNegocioError('El owner es obligatorio');
+    if (!data.name.trim()) throw new BusinessRuleError('Pet name is required');
+    if (!data.ownerId.trim()) throw new BusinessRuleError('Owner is required');
     if (data.weightKg !== null && (!Number.isFinite(data.weightKg) || data.weightKg <= 0)) {
-      throw new ReglaNegocioError('El weight debe ser un número mayor que cero');
+      throw new BusinessRuleError('Weight must be greater than zero');
     }
     return new Pet(data);
   }
