@@ -14,7 +14,7 @@ import { PropietariosModule } from './propietarios/propietarios.module';
       useFactory: (configuracion: ConfigService) => ({
         type: 'postgres' as const,
         host: configuracion.get<string>('DATABASE_HOST', 'localhost'),
-        port: configuracion.get<number>('DATABASE_PORT', 5432),
+        port: Number(configuracion.get<string>('DATABASE_PORT', '5432')),
         username: configuracion.get<string>('DATABASE_USER', 'petclinic'),
         password: configuracion.get<string>('DATABASE_PASSWORD', 'petclinic'),
         database: configuracion.get<string>('DATABASE_NAME', 'petclinic'),
