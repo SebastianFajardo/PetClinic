@@ -157,7 +157,3 @@ El alcance actual no contempla facturación electrónica, pagos reales ni integr
 
 La compilación correcta y la aprobación de pruebas funcionales no demuestran por sí solas que el sistema esté listo para producción ni permiten asignar automáticamente un nivel de madurez tecnológica (TRL). Cualquier nivel TRL debe justificarse con evidencias del prototipo integrado, el entorno de validación, los resultados de las pruebas y los criterios definidos por el curso y el tutor.
 
-## Información del repositorio
-
-- **Repositorio:** SebastianFajardo/PetClinic.
-- **Rama de trabajo:** `develop/petclinic-cloud`.
