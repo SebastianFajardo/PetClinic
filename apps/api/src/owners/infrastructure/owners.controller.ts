@@ -1,9 +1,9 @@
 import { Roles } from '../../authentication/infrastructure/roles.decorator';
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
 import { IsEmail, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
-import { CrearOwner, OwnersService } from '../application/owners.service';
+import { CreateOwner, OwnersService } from '../application/owners.service';
 
-class CrearOwnerDto implements CrearOwner {
+class CreateOwnerDto implements CreateOwner {
   @IsString()
   @MinLength(2)
   @MaxLength(100)
@@ -34,7 +34,7 @@ class CrearOwnerDto implements CrearOwner {
   address?: string;
 }
 
-class ActualizarOwnerDto {
+class UpdateOwnerDto {
   @IsOptional()
   @IsString()
   @MinLength(2)
@@ -76,7 +76,7 @@ export class OwnersController {
   constructor(private readonly service: OwnersService) {}
 
   @Post()
-  create(@Body() input: CrearOwnerDto) {
+  create(@Body() input: CreateOwnerDto) {
     return this.service.create(input);
   }
 
@@ -91,7 +91,7 @@ export class OwnersController {
   }
 
   @Patch(':id')
-  update(@Param('id', ParseUUIDPipe) id: string, @Body() input: ActualizarOwnerDto) {
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() input: UpdateOwnerDto) {
     return this.service.update(id, input);
   }
 

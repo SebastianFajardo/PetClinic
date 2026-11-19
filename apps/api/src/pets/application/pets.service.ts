@@ -1,10 +1,10 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
-import { OwnerRepository } from '../../propietarios/domain/owner.repository';
+import { OwnerRepository } from '../../owners/domain/owner.repository';
 import { PetData, PetSpecies, Pet, PetSex } from '../domain/pet';
 import { PetRepository } from '../domain/pet.repository';
 
-export interface CrearPet {
+export interface CreatePet {
   ownerId: string;
   name: string;
   species: PetSpecies;
@@ -12,7 +12,7 @@ export interface CrearPet {
   birthDate?: string;
   sex?: PetSex;
   color?: string;
-  pesoKg?: number;
+  weightKg?: number;
   notes?: string;
 }
 
@@ -20,11 +20,11 @@ export interface CrearPet {
 export class PetsService {
   constructor(
     @Inject('PetRepository') private readonly repository: PetRepository,
-    @Inject('OwnerRepository') private readonly propietarios: OwnerRepository,
+    @Inject('OwnerRepository') private readonly owners: OwnerRepository,
   ) {}
 
-  async create(input: CrearPet): Promise<PetData> {
-    const owner = await this.propietarios.findById(input.ownerId);
+  async create(input: CreatePet): Promise<PetData> {
+    const owner = await this.owners.findById(input.ownerId);
     if (!owner) throw new NotFoundException('No se encontró el owner asociado');
     const now = new Date();
     const pet = Pet.create({
@@ -36,17 +36,17 @@ export class PetsService {
       birthDate: input.birthDate ?? null,
       sex: input.sex ?? 'unknown',
       color: input.color?.trim() || null,
-      pesoKg: input.pesoKg ?? null,
+      weightKg: input.weightKg ?? null,
       notes: input.notes?.trim() || null,
       createdAt: now,
       updatedAt: now,
     });
-    return this.repository.save(pet.obtenerDatos());
+    return this.repository.save(pet.toData());
   }
 
   async list(ownerId?: string): Promise<PetData[]> {
     if (ownerId) {
-      const owner = await this.propietarios.findById(ownerId);
+      const owner = await this.owners.findById(ownerId);
       if (!owner) throw new NotFoundException('No se encontró el owner');
       return this.repository.listarPorOwner(ownerId);
     }
@@ -59,11 +59,11 @@ export class PetsService {
     return pet;
   }
 
-  async update(id: string, input: Partial<CrearPet>): Promise<PetData> {
+  async update(id: string, input: Partial<CreatePet>): Promise<PetData> {
     const actual = await this.getById(id);
     const ownerId = input.ownerId ?? actual.ownerId;
     if (input.ownerId) {
-      const owner = await this.propietarios.findById(ownerId);
+      const owner = await this.owners.findById(ownerId);
       if (!owner) throw new NotFoundException('No se encontró el owner asociado');
     }
     return this.repository.save(Pet.create({
@@ -75,10 +75,10 @@ export class PetsService {
       birthDate: input.birthDate ?? actual.birthDate,
       sex: input.sex ?? actual.sex,
       color: input.color === undefined ? actual.color : input.color.trim() || null,
-      pesoKg: input.pesoKg ?? actual.pesoKg,
+      weightKg: input.weightKg ?? actual.weightKg,
       notes: input.notes === undefined ? actual.notes : input.notes.trim() || null,
       updatedAt: new Date(),
-    }).obtenerDatos());
+    }).toData());
   }
 
   async delete(id: string): Promise<void> {

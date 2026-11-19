@@ -31,7 +31,7 @@ export class Owner {
     return new Owner(datos);
   }
 
-  obtenerDatos(): OwnerData {
+  toData(): OwnerData {
     return { ...this.datos };
   }
 }

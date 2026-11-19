@@ -14,7 +14,7 @@ describe('Owner', () => {
   };
 
   it('creates an owner with valid data', () => {
-    expect(Owner.create(datos).obtenerDatos()).toEqual(datos);
+    expect(Owner.create(datos).toData()).toEqual(datos);
   });
 
   it('rejects an invalid email address', () => {

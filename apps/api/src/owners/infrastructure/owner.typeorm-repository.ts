@@ -1,24 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Not } from 'typeorm';
-import { DatosOwner } from '../domain/owner';
-import { OwnerRepositorio } from '../domain/owner.repository';
+import { OwnerData } from '../domain/owner';
+import { OwnerRepository } from '../domain/owner.repository';
 import { OwnerOrm } from './owner.orm-entity';
 
 @Injectable()
-export class OwnerTypeOrmRepository implements OwnerRepositorio {
+export class OwnerTypeOrmRepository implements OwnerRepository {
   constructor(@InjectRepository(OwnerOrm) private readonly repository: Repository<OwnerOrm>) {}
 
-  async save(datos: DatosOwner): Promise<DatosOwner> {
+  async save(datos: OwnerData): Promise<OwnerData> {
     const entidad = this.repository.create(datos);
     return this.repository.save(entidad);
   }
 
-  async findById(id: string): Promise<DatosOwner | null> {
+  async findById(id: string): Promise<OwnerData | null> {
     return this.repository.findOne({ where: { id } });
   }
 
-  async list(): Promise<DatosOwner[]> {
+  async list(): Promise<OwnerData[]> {
     return this.repository.find({ order: { createdAt: 'DESC' } });
   }
 
