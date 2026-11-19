@@ -1,7 +1,7 @@
 import { Appointment } from './appointment';
 
 describe('Appointment', () => {
-  const datos = {
+  const data = {
     id: 'a66bdfad-0b10-4b4c-8d61-8c9acddab2c1',
     petId: 'b66bdfad-0b10-4b4c-8d61-8c9acddab2c1',
     dateTime: new Date('2026-12-01T14:00:00.000Z'),
@@ -14,14 +14,14 @@ describe('Appointment', () => {
   };
 
   it('creates an appointment with valid data', () => {
-    expect(Appointment.create(datos).toData()).toEqual(datos);
+    expect(Appointment.create(data).toData()).toEqual(data);
   });
 
   it('rejects a duration outside the allowed range', () => {
-    expect(() => Appointment.create({ ...datos, durationMinutes: 5 })).toThrow('La duración debe estar entre 15 y 240 minutos');
+    expect(() => Appointment.create({ ...data, durationMinutes: 5 })).toThrow('La duración debe estar entre 15 y 240 minutos');
   });
 
   it('rejects an empty reason', () => {
-    expect(() => Appointment.create({ ...datos, reason: ' ' })).toThrow('El reason de la appointment es obligatorio');
+    expect(() => Appointment.create({ ...data, reason: ' ' })).toThrow('El reason de the appointment es obligatorio');
   });
 });

@@ -15,19 +15,19 @@ export interface AppointmentData {
 }
 
 export class Appointment {
-  private constructor(private readonly datos: AppointmentData) {}
+  private constructor(private readonly data: AppointmentData) {}
 
-  static create(datos: AppointmentData): Appointment {
-    if (!datos.petId.trim()) throw new BusinessRuleError('La pet es obligatoria');
-    if (Number.isNaN(datos.dateTime.getTime())) throw new BusinessRuleError('The appointment date is invalid');
-    if (!Number.isInteger(datos.durationMinutes) || datos.durationMinutes < 15 || datos.durationMinutes > 240) {
+  static create(data: AppointmentData): Appointment {
+    if (!data.petId.trim()) throw new BusinessRuleError('The pet es obligatoria');
+    if (Number.isNaN(data.dateTime.getTime())) throw new BusinessRuleError('The appointment date is invalid');
+    if (!Number.isInteger(data.durationMinutes) || data.durationMinutes < 15 || data.durationMinutes > 240) {
       throw new BusinessRuleError('La duración debe estar entre 15 y 240 minutos');
     }
-    if (!datos.reason.trim()) throw new BusinessRuleError('El reason de la appointment es obligatorio');
-    return new Appointment(datos);
+    if (!data.reason.trim()) throw new BusinessRuleError('El reason de the appointment es obligatorio');
+    return new Appointment(data);
   }
 
   toData(): AppointmentData {
-    return { ...this.datos };
+    return { ...this.data };
   }
 }

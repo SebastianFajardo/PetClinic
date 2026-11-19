@@ -9,8 +9,8 @@ import { AppointmentOrm } from './appointment.orm-entity';
 export class AppointmentTypeOrmRepository implements AppointmentRepository {
   constructor(@InjectRepository(AppointmentOrm) private readonly repository: Repository<AppointmentOrm>) {}
 
-  async save(datos: AppointmentData): Promise<AppointmentData> {
-    return this.repository.save(this.repository.create(datos));
+  async save(data: AppointmentData): Promise<AppointmentData> {
+    return this.repository.save(this.repository.create(data));
   }
 
   async findById(id: string): Promise<AppointmentData | null> {

@@ -55,7 +55,7 @@ export class AppointmentsService {
   }
 
   async updateStatus(id: string, status: AppointmentStatus): Promise<AppointmentData> {
-    const actual = await this.getById(id);
+    const current = await this.getById(id);
     const transitions: Record<AppointmentStatus, AppointmentStatus[]> = {
       scheduled: ['confirmed', 'cancelled', 'no_show'],
       confirmed: ['completed', 'cancelled', 'no_show'],
@@ -63,10 +63,10 @@ export class AppointmentsService {
       cancelled: [],
       no_show: [],
     };
-    if (actual.status !== status && !transitions[actual.status].includes(status)) {
+    if (current.status !== status && !transitions[current.status].includes(status)) {
       throw new ConflictException('The requested status transition is not allowed');
     }
-    return this.repository.save({ ...actual, status, updatedAt: new Date() });
+    return this.repository.save({ ...current, status, updatedAt: new Date() });
   }
 
   private async validatePet(petId: string): Promise<void> {
@@ -79,7 +79,7 @@ export class AppointmentsService {
     if (Number.isNaN(start.getTime())) throw new ConflictException('The appointment date is invalid');
     const end = new Date(start.getTime() + durationMinutes * 60_000);
     if (await this.repository.hasOverlap(petId, start, end, excludedId)) {
-      throw new ConflictException('La pet ya tiene una appointment en ese horario');
+      throw new ConflictException('The pet ya tiene una appointment en ese horario');
     }
   }
 }
