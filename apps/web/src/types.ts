@@ -45,3 +45,47 @@ export interface PetInput {
   pesoKg?: number;
   notas?: string;
 }
+
+export interface Appointment {
+  id: string;
+  mascotaId: string;
+  fechaHora: string;
+  duracionMinutos: number;
+  motivo: string;
+  estado: 'scheduled' | 'confirmed' | 'completed' | 'cancelled' | 'no_show';
+  observaciones: string | null;
+  creadaEn: string;
+  actualizadaEn: string;
+}
+
+export interface AppointmentInput {
+  mascotaId: string;
+  fechaHora: string;
+  duracionMinutos: number;
+  motivo: string;
+  observaciones?: string;
+}
+
+export interface MedicalRecord {
+  id: string;
+  mascotaId: string;
+  nombreVeterinario: string;
+  motivoConsulta: string;
+  sintomas: string;
+  diagnostico: string;
+  tratamiento: string;
+  observaciones: string | null;
+  registradaEn: string;
+  creadaEn: string;
+}
+
+export interface MedicalRecordInput {
+  mascotaId: string;
+  nombreVeterinario: string;
+  motivoConsulta: string;
+  sintomas: string;
+  diagnostico: string;
+  tratamiento: string;
+  observaciones?: string;
+  registradaEn?: string;
+}
