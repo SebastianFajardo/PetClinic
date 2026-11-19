@@ -11,13 +11,13 @@ export interface DatosUser {
   updatedAt: Date;
 }
 
-export interface UserAutenticado {
+export interface AuthenticatedUser {
   id: string;
   name: string;
   email: string;
   role: RolUser;
 }
 
-export function obtenerUserAutenticado(datos: DatosUser): UserAutenticado {
+export function obtenerAuthenticatedUser(datos: DatosUser): AuthenticatedUser {
   return { id: datos.id, name: datos.name, email: datos.email, role: datos.role };
 }

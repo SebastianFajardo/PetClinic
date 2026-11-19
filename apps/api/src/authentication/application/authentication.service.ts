@@ -2,7 +2,7 @@ import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/co
 import { JwtService } from '@nestjs/jwt';
 import { randomUUID } from 'node:crypto';
 import { compare, hash } from 'bcryptjs';
-import { DatosUser, obtenerUserAutenticado } from '../domain/user';
+import { DatosUser, obtenerAuthenticatedUser } from '../domain/user';
 import { UserTypeOrmRepository } from '../infrastructure/user.typeorm-repositorio';
 
 export interface RegistrarUser {
@@ -43,7 +43,7 @@ export class AuthenticationService {
   }
 
   private async generarSesion(user: DatosUser) {
-    const identidad = obtenerUserAutenticado(user);
+    const identidad = obtenerAuthenticatedUser(user);
     const accessToken = await this.jwt.signAsync({
       sub: identidad.id,
       email: identidad.email,

@@ -17,10 +17,10 @@ export class UserOrm {
   contrasenaHash!: string;
 
   @Column({ name: 'role', type: 'varchar', length: 30 })
-  rol!: RolUser;
+  role!: RolUser;
 
   @Column({ name: 'is_active', type: 'boolean', default: true })
-  activo!: boolean;
+  isActive!: boolean;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt!: Date;

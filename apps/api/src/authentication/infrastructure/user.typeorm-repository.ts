@@ -12,7 +12,7 @@ export class UserTypeOrmRepository {
     return this.repository.save(this.repository.create(datos));
   }
 
-  async buscarPorCorreo(email: string): Promise<DatosUser | null> {
+  async findByEmail(email: string): Promise<DatosUser | null> {
     return this.repository.createQueryBuilder('user')
       .addSelect('user.contrasenaHash')
       .where('user.email = :email', { email })

@@ -3,7 +3,7 @@ import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
 import { AuthenticationService } from '../application/authentication.servicio';
 import { CurrentUser } from './user-actual.decorator';
 import { Publica } from './publica.decorator';
-import { UserAutenticado } from '../domain/user';
+import { AuthenticatedUser } from '../domain/user';
 
 class RegisterUserDto {
   @IsString()
@@ -49,7 +49,7 @@ export class AuthenticationController {
   }
 
   @Get('me')
-  getSession(@CurrentUser() user: UserAutenticado) {
+  getSession(@CurrentUser() user: AuthenticatedUser) {
     return user;
   }
 }
