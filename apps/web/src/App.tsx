@@ -112,7 +112,7 @@ function Dashboard({ user, onLogout }: { user: AuthUser; onLogout: () => void })
           <button className={section === 'appointments' ? 'nav-item active' : 'nav-item'} onClick={() => setSection('appointments')}>
             <span>▦</span> Citas
           </button>
-          {['admin', 'veterinarian'].includes(user.rol) && <button className={section === 'medical-records' ? 'nav-item active' : 'nav-item'} onClick={() => setSection('medical-records')}>
+          {['admin', 'veterinarian'].includes(user.role) && <button className={section === 'medical-records' ? 'nav-item active' : 'nav-item'} onClick={() => setSection('medical-records')}>
             <span>＋</span> Historias clínicas
           </button>}
         </nav>
@@ -128,7 +128,7 @@ function Dashboard({ user, onLogout }: { user: AuthUser; onLogout: () => void })
             <span className="eyebrow">PLATAFORMA DE GESTIÓN VETERINARIA</span>
             <h1>{section === 'overview' ? 'Resumen general' : section === 'owners' ? 'Propietarios' : section === 'pets' ? 'Mascotas' : section === 'appointments' ? 'Citas' : 'Historias clínicas'}</h1>
           </div>
-          <div className="account-actions"><div className="account-identity"><strong>{user.nombre}</strong><span>{user.rol}</span></div><button className="secondary-button" onClick={onLogout}>Cerrar sesión</button><button className="refresh-button" onClick={() => void loadData()} aria-label="Actualizar información">↻</button></div>
+          <div className="account-actions"><div className="account-identity"><strong>{user.name}</strong><span>{user.role}</span></div><button className="secondary-button" onClick={onLogout}>Cerrar sesión</button><button className="refresh-button" onClick={() => void loadData()} aria-label="Actualizar información">↻</button></div>
         </header>
 
         {error && <div className="error-banner" role="alert">{error}</div>}
@@ -183,7 +183,7 @@ function Dashboard({ user, onLogout }: { user: AuthUser; onLogout: () => void })
 
         {requestState === 'ready' && section === 'appointments' && <AppointmentsPage pets={pets} />}
 
-        {requestState === 'ready' && section === 'medical-records' && ['admin', 'veterinarian'].includes(user.rol) && <MedicalRecordsPage pets={pets} />}
+        {requestState === 'ready' && section === 'medical-records' && ['admin', 'veterinarian'].includes(user.role) && <MedicalRecordsPage pets={pets} />}
 
         {requestState === 'ready' && section === 'pets' && (
           <section className="content-card">
