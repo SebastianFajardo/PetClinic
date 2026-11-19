@@ -6,11 +6,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { JwtAuthGuard } from './authentication/infrastructure/guards/acceso-jwt.guard';
 import { RolesGuard } from './authentication/infrastructure/guards/roles.guard';
-import { CitasModule } from './citas/citas.module';
-import { EstadoController } from './estado/infrastructure/estado.controller';
-import { HistoriasClinicasModule } from './historias-clinicas/historias-clinicas.module';
-import { MascotasModule } from './mascotas/mascotas.module';
-import { PropietariosModule } from './propietarios/propietarios.module';
+import { AppointmentsModule } from './appointments/appointments.module';
+import { HealthController } from './health/infrastructure/health.controller';
+import { MedicalRecordsModule } from './medical-records/medical-records.module';
+import { PetsModule } from './pets/pets.module';
+import { OwnersModule } from './owners/owners.module';
 
 @Module({
   imports: [
@@ -36,12 +36,12 @@ import { PropietariosModule } from './propietarios/propietarios.module';
       }),
     }),
     AuthenticationModule,
-    PropietariosModule,
-    MascotasModule,
-    HistoriasClinicasModule,
-    CitasModule,
+    OwnersModule,
+    PetsModule,
+    MedicalRecordsModule,
+    AppointmentsModule,
   ],
-  controllers: [EstadoController],
+  controllers: [HealthController],
   providers: [
     { provide: APP_GUARD, useExisting: JwtAuthGuard },
     { provide: APP_GUARD, useExisting: RolesGuard },

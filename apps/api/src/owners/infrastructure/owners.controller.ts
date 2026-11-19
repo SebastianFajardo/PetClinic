@@ -1,9 +1,9 @@
-import { Roles } from '../../autenticacion/infraestructura/roles.decorator';
+import { Roles } from '../../authentication/infrastructure/roles.decorator';
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
 import { IsEmail, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
-import { CrearPropietario, PropietariosServicio } from '../aplicacion/propietarios.servicio';
+import { CrearOwner, OwnersService } from '../application/owners.servicio';
 
-class CrearPropietarioDto implements CrearPropietario {
+class CrearOwnerDto implements CrearOwner {
   @IsString()
   @MinLength(2)
   @MaxLength(100)
@@ -34,7 +34,7 @@ class CrearPropietarioDto implements CrearPropietario {
   direccion?: string;
 }
 
-class ActualizarPropietarioDto {
+class ActualizarOwnerDto {
   @IsOptional()
   @IsString()
   @MinLength(2)
@@ -72,11 +72,11 @@ class ActualizarPropietarioDto {
 
 @Controller('owners')
 @Roles('admin', 'veterinarian', 'assistant', 'receptionist')
-export class PropietariosController {
-  constructor(private readonly servicio: PropietariosServicio) {}
+export class OwnersController {
+  constructor(private readonly servicio: OwnersService) {}
 
   @Post()
-  crear(@Body() entrada: CrearPropietarioDto) {
+  crear(@Body() entrada: CrearOwnerDto) {
     return this.servicio.crear(entrada);
   }
 
@@ -91,7 +91,7 @@ export class PropietariosController {
   }
 
   @Patch(':id')
-  actualizar(@Param('id', ParseUUIDPipe) id: string, @Body() entrada: ActualizarPropietarioDto) {
+  actualizar(@Param('id', ParseUUIDPipe) id: string, @Body() entrada: ActualizarOwnerDto) {
     return this.servicio.actualizar(id, entrada);
   }
 
