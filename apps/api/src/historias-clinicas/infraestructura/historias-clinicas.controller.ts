@@ -1,3 +1,4 @@
+import { Roles } from '../../autenticacion/infraestructura/roles.decorator';
 import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { IsDateString, IsOptional, IsString, IsUUID, MaxLength, MinLength } from 'class-validator';
 import { CrearHistoriaClinica, HistoriasClinicasServicio } from '../aplicacion/historias-clinicas.servicio';
@@ -38,6 +39,7 @@ class CrearHistoriaClinicaDto implements CrearHistoriaClinica {
 }
 
 @Controller('medical-records')
+@Roles('admin', 'veterinarian')
 export class HistoriasClinicasController {
   constructor(private readonly servicio: HistoriasClinicasServicio) {}
 
