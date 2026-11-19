@@ -2,7 +2,7 @@ import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/co
 import { JwtService } from '@nestjs/jwt';
 import { randomUUID } from 'node:crypto';
 import { compare, hash } from 'bcryptjs';
-import { DatosUsuario, obtenerUsuarioAutenticado, RolUsuario } from '../dominio/usuario';
+import { DatosUsuario, obtenerUsuarioAutenticado } from '../dominio/usuario';
 import { UsuarioTypeOrmRepositorio } from '../infraestructura/usuario.typeorm-repositorio';
 
 export interface RegistrarUsuario {
@@ -13,10 +13,7 @@ export interface RegistrarUsuario {
 
 @Injectable()
 export class AutenticacionServicio {
-  constructor(
-    private readonly usuarios: UsuarioTypeOrmRepositorio,
-    private readonly jwt: JwtService,
-  ) {}
+  constructor(private readonly usuarios: UsuarioTypeOrmRepositorio, private readonly jwt: JwtService) {}
 
   async registrar(entrada: RegistrarUsuario) {
     const correo = entrada.correo.trim().toLowerCase();
@@ -34,8 +31,7 @@ export class AutenticacionServicio {
       creadoEn: ahora,
       actualizadoEn: ahora,
     };
-    const guardado = await this.usuarios.guardar(usuario);
-    return this.generarSesion(guardado);
+    return this.generarSesion(await this.usuarios.guardar(usuario));
   }
 
   async iniciarSesion(correoEntrada: string, contrasena: string) {
@@ -51,6 +47,7 @@ export class AutenticacionServicio {
     const accessToken = await this.jwt.signAsync({
       sub: identidad.id,
       email: identidad.correo,
+      name: identidad.nombre,
       role: identidad.rol,
     });
     return { accessToken, user: identidad };
