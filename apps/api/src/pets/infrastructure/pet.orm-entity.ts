@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 import { OwnerOrm } from '../../owners/infrastructure/owner.orm-entity';
+import { PetSex, PetSpecies } from '../domain/pet';
 
 @Entity({ name: 'pets' })
 @Index('IDX_pets_owner_id', ['ownerId'])
@@ -18,7 +19,7 @@ export class PetOrm {
   name!: string;
 
   @Column({ name: 'species', type: 'varchar', length: 20 })
-  species!: string;
+  species!: PetSpecies;
 
   @Column({ name: 'breed', type: 'varchar', length: 100, nullable: true })
   breed!: string | null;
@@ -27,7 +28,7 @@ export class PetOrm {
   birthDate!: string | null;
 
   @Column({ name: 'sex', type: 'varchar', length: 20, default: 'unknown' })
-  sex!: string;
+  sex!: PetSex;
 
   @Column({ name: 'color', type: 'varchar', length: 80, nullable: true })
   color!: string | null;

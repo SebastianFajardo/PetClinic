@@ -1,4 +1,5 @@
 import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import { AppointmentStatus } from '../domain/appointment';
 import { PetOrm } from '../../pets/infrastructure/pet.orm-entity';
 
 @Entity({ name: 'appointments' })
@@ -24,7 +25,7 @@ export class AppointmentOrm {
   reason!: string;
 
   @Column({ name: 'status', type: 'varchar', length: 20, default: 'scheduled' })
-  status!: string;
+  status!: AppointmentStatus;
 
   @Column({ name: 'notes', type: 'text', nullable: true })
   notes!: string | null;
