@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import { DatosPropietario, Propietario } from '../dominio/propietario';
 import { PropietarioRepositorio } from '../dominio/propietario.repositorio';
@@ -14,7 +14,7 @@ export interface CrearPropietario {
 
 @Injectable()
 export class PropietariosServicio {
-  constructor(private readonly repositorio: PropietarioRepositorio) {}
+  constructor(@Inject('PropietarioRepositorio') private readonly repositorio: PropietarioRepositorio) {}
 
   async crear(entrada: CrearPropietario): Promise<DatosPropietario> {
     await this.validarUnicidad(entrada.documento, entrada.correo);
@@ -50,8 +50,6 @@ export class PropietariosServicio {
     await this.validarUnicidad(documento, correo, id);
     const actualizado = Propietario.crear({
       ...actual,
-      ...entrada,
-      id,
       nombre: entrada.nombre?.trim() ?? actual.nombre,
       apellido: entrada.apellido?.trim() ?? actual.apellido,
       documento,
