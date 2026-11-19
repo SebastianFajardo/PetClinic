@@ -161,4 +161,3 @@ La compilación correcta y la aprobación de pruebas funcionales no demuestran p
 
 - **Repositorio:** SebastianFajardo/PetClinic.
 - **Rama de trabajo:** `develop/petclinic-cloud`.
-- **Aplicación desplegada:** https://petclinic-seven.vercel.app/
