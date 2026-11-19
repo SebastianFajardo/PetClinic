@@ -76,7 +76,7 @@ function Dashboard({ user, onLogout }: { user: AuthUser; onLogout: () => void })
       await api.pets.create({
         ownerId: String(form.get('ownerId')),
         name: String(form.get('name')),
-        especie: String(form.get('species')) as Pet['species'],
+        species: String(form.get('species')) as Pet['species'],
         breed: String(form.get('breed')),
         birthDate: String(form.get('birthDate')) || undefined,
         sex: String(form.get('sex')) as Pet['sex'],
@@ -210,7 +210,7 @@ function Dashboard({ user, onLogout }: { user: AuthUser; onLogout: () => void })
 }
 
 function PetTable({ pets, owners }: { pets: Pet[]; owners: Owner[] }) {
-  const ownerNames = new Map(owners.map(owner => [owner.id, `${owner.nombre} ${owner.apellido}`]));
+  const ownerNames = new Map(owners.map(owner => [owner.id, `${owner.name} ${owner.lastName}`]));
   return (
     <div className="table-wrap"><table><thead><tr><th>Mascota</th><th>Especie</th><th>Raza</th><th>Propietario</th><th>Peso</th></tr></thead><tbody>
       {pets.map(pet => <tr key={pet.id}><td><strong>{pet.name}</strong></td><td>{speciesLabels[pet.species]}</td><td>{pet.breed ?? '—'}</td><td>{ownerNames.get(pet.ownerId) ?? '—'}</td><td>{pet.weightKg ? `${pet.weightKg} kg` : '—'}</td></tr>)}
