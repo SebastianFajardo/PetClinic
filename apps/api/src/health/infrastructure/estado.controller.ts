@@ -1,8 +1,8 @@
 import { Controller, Get } from '@nestjs/common';
-import { Publica } from '../../autenticacion/infraestructura/publica.decorator';
+import { Publica } from '../../autenticacion/infrastructure/publica.decorator';
 
 @Controller('health')
-export class EstadoController {
+export class HealthController {
   @Get()
   @Publica()
   consultar(): { status: string; service: string } {
