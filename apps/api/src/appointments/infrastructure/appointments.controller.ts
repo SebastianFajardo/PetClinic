@@ -26,6 +26,32 @@ class CreateAppointmentDto implements CreateAppointment {
   notes?: string;
 }
 
+class UpdateAppointmentDto {
+  @IsOptional()
+  @IsUUID()
+  petId?: string;
+
+  @IsOptional()
+  @IsDateString()
+  dateTime?: string;
+
+  @IsOptional()
+  @IsInt()
+  @Min(15)
+  @Max(240)
+  durationMinutes?: number;
+
+  @IsOptional()
+  @IsString()
+  @MinLength(2)
+  @MaxLength(500)
+  reason?: string;
+
+  @IsOptional()
+  @IsString()
+  notes?: string;
+}
+
 class UpdateAppointmentStatusDto {
   @IsIn(['scheduled', 'confirmed', 'completed', 'cancelled', 'no_show'])
   status!: AppointmentStatus;
@@ -49,6 +75,11 @@ export class AppointmentsController {
   @Get(':id')
   getById(@Param('id', ParseUUIDPipe) id: string) {
     return this.service.getById(id);
+  }
+
+  @Patch(':id')
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() input: UpdateAppointmentDto) {
+    return this.service.update(id, input);
   }
 
   @Patch(':id/status')
