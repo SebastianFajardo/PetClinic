@@ -8,14 +8,14 @@ export const ROLES_PERMITIDOS = 'roles_permitidos';
 export class RolesGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
 
-  canActivate(contexto: ExecutionContext): boolean {
+  canActivate(context: ExecutionContext): boolean {
     const roles = this.reflector.getAllAndOverride<RolUser[]>(ROLES_PERMITIDOS, [
-      contexto.getHandler(),
-      contexto.getClass(),
+      context.getHandler(),
+      context.getClass(),
     ]);
     if (!roles?.length) return true;
-    const solicitud = contexto.switchToHttp().getRequest<{ user?: { role: RolUser } }>();
-    if (!solicitud.user || !roles.includes(solicitud.user.role)) {
+    const request = context.switchToHttp().getRequest<{ user?: { role: RolUser } }>();
+    if (!request.user || !roles.includes(request.user.role)) {
       throw new ForbiddenException('No tiene permisos para realizar esta operación');
     }
     return true;

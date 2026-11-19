@@ -1,6 +1,6 @@
 export type RolUser = 'admin' | 'veterinarian' | 'assistant' | 'receptionist';
 
-export interface DatosUser {
+export interface UserData {
   id: string;
   name: string;
   email: string;
@@ -18,6 +18,6 @@ export interface AuthenticatedUser {
   role: RolUser;
 }
 
-export function obtenerAuthenticatedUser(datos: DatosUser): AuthenticatedUser {
-  return { id: datos.id, name: datos.name, email: datos.email, role: datos.role };
+export function toAuthenticatedUser(data: UserData): AuthenticatedUser {
+  return { id: data.id, name: data.name, email: data.email, role: data.role };
 }

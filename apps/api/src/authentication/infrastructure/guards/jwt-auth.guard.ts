@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { AuthenticatedUser } from '../../domain/user';
-import { RUTA_PUBLICA } from '../public.decorator';
+import { PUBLIC_ROUTE } from '../public.decorator';
 
 interface SolicitudAutenticada extends Request {
   user?: AuthenticatedUser;
@@ -13,15 +13,15 @@ interface SolicitudAutenticada extends Request {
 export class JwtAuthGuard implements CanActivate {
   constructor(private readonly jwt: JwtService, private readonly reflector: Reflector) {}
 
-  async canActivate(contexto: ExecutionContext): Promise<boolean> {
-    const esPublica = this.reflector.getAllAndOverride<boolean>(RUTA_PUBLICA, [
-      contexto.getHandler(),
-      contexto.getClass(),
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const esPublic = this.reflector.getAllAndOverride<boolean>(PUBLIC_ROUTE, [
+      context.getHandler(),
+      context.getClass(),
     ]);
-    if (esPublica) return true;
+    if (esPublic) return true;
 
-    const solicitud = contexto.switchToHttp().getRequest<SolicitudAutenticada>();
-    const encabezado = solicitud.headers.authorization;
+    const request = context.switchToHttp().getRequest<SolicitudAutenticada>();
+    const encabezado = request.headers.authorization;
     if (!encabezado?.startsWith('Bearer ')) {
       throw new UnauthorizedException('Se requiere autenticación');
     }
@@ -32,7 +32,7 @@ export class JwtAuthGuard implements CanActivate {
         name: string;
         role: AuthenticatedUser['role'];
       }>(encabezado.slice(7));
-      solicitud.user = { id: carga.sub, email: carga.email, name: carga.name, role: carga.role };
+      request.user = { id: carga.sub, email: carga.email, name: carga.name, role: carga.role };
       return true;
     } catch {
       throw new UnauthorizedException('La sesión no es válida o ha expirado');

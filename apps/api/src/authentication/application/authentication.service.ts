@@ -2,10 +2,10 @@ import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/co
 import { JwtService } from '@nestjs/jwt';
 import { randomUUID } from 'node:crypto';
 import { compare, hash } from 'bcryptjs';
-import { DatosUser, obtenerAuthenticatedUser } from '../domain/user';
+import { UserData, toAuthenticatedUser } from '../domain/user';
 import { UserTypeOrmRepository } from '../infrastructure/user.typeorm-repositorio';
 
-export interface RegistrarUser {
+export interface RegisterUser {
   name: string;
   email: string;
   password: string;
@@ -13,15 +13,15 @@ export interface RegistrarUser {
 
 @Injectable()
 export class AuthenticationService {
-  constructor(private readonly usuarios: UserTypeOrmRepository, private readonly jwt: JwtService) {}
+  constructor(private readonly users: UserTypeOrmRepository, private readonly jwt: JwtService) {}
 
-  async register(input: RegistrarUser) {
+  async register(input: RegisterUser) {
     const email = input.email.trim().toLowerCase();
-    if (await this.usuarios.findByEmail(email)) {
-      throw new ConflictException('El email electrónico ya está registrado');
+    if (await this.users.findByEmail(email)) {
+      throw new ConflictException('The email address is already registered');
     }
     const now = new Date();
-    const user: DatosUser = {
+    const user: UserData = {
       id: randomUUID(),
       name: input.name.trim(),
       email,
@@ -31,19 +31,19 @@ export class AuthenticationService {
       createdAt: now,
       updatedAt: now,
     };
-    return this.generarSesion(await this.usuarios.save(user));
+    return this.createSession(await this.users.save(user));
   }
 
-  async login(correoEntrada: string, password: string) {
-    const user = await this.usuarios.findByEmail(correoEntrada.trim().toLowerCase());
+  async login(emailInput: string, password: string) {
+    const user = await this.users.findByEmail(emailInput.trim().toLowerCase());
     if (!user || !user.isActive || !(await compare(password, user.passwordHash))) {
-      throw new UnauthorizedException('Credenciales no válidas');
+      throw new UnauthorizedException('Invalid credentials');
     }
-    return this.generarSesion(user);
+    return this.createSession(user);
   }
 
-  private async generarSesion(user: DatosUser) {
-    const identidad = obtenerAuthenticatedUser(user);
+  private async createSession(user: UserData) {
+    const identidad = toAuthenticatedUser(user);
     const accessToken = await this.jwt.signAsync({
       sub: identidad.id,
       email: identidad.email,

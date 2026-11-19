@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post } from '@nestjs/common';
 import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
 import { AuthenticationService } from '../application/authentication.service';
 import { CurrentUser } from './current-user.decorator';
-import { Publica } from './public.decorator';
+import { Public } from './public.decorator';
 import { AuthenticatedUser } from '../domain/user';
 
 class RegisterUserDto {
@@ -37,13 +37,13 @@ export class AuthenticationController {
   constructor(private readonly service: AuthenticationService) {}
 
   @Post('register')
-  @Publica()
+  @Public()
   register(@Body() input: RegisterUserDto) {
     return this.service.register(input);
   }
 
   @Post('login')
-  @Publica()
+  @Public()
   login(@Body() input: LoginDto) {
     return this.service.login(input.email, input.password);
   }
