@@ -1,5 +1,5 @@
 import { FormEvent, useState } from 'react';
-import { api, sessionStorage, type AuthSession } from '../services/api';
+import { api, sessionStorage, type AuthSession } from '../../services/api';
 
 interface AuthPageProps {
   onAuthenticated: (session: AuthSession) => void;
