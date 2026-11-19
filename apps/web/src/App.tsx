@@ -124,9 +124,9 @@ function Dashboard({ user, onLogout }: { user: AuthUser; onLogout: () => void })
           {['admin', 'veterinarian', 'assistant'].includes(user.role) && <button className={section === 'inventory' ? 'nav-item active' : 'nav-item'} onClick={() => setSection('inventory')}>
             <span>▤</span> Inventario
           </button>}
-          <button className={section === 'reports' ? 'nav-item active' : 'nav-item'} onClick={() => setSection('reports')}>
+          {['admin', 'veterinarian'].includes(user.role) && <button className={section === 'reports' ? 'nav-item active' : 'nav-item'} onClick={() => setSection('reports')}>
             <span>▥</span> Reportes
-          </button>
+          </button>}
         </nav>
         <div className="sidebar-footer">
           <span className={apiConnected ? 'connection-dot online' : 'connection-dot'} />
@@ -201,7 +201,7 @@ function Dashboard({ user, onLogout }: { user: AuthUser; onLogout: () => void })
 
         {requestState === 'ready' && section === 'inventory' && ['admin', 'veterinarian', 'assistant'].includes(user.role) && <InventoryPage />}
 
-        {requestState === 'ready' && section === 'reports' && <ReportsPage />
+        {requestState === 'ready' && section === 'reports' && ['admin', 'veterinarian'].includes(user.role) && <ReportsPage />
 
         {requestState === 'ready' && section === 'pets' && (
           <section className="content-card">
