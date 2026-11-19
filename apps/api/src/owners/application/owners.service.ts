@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { OwnerData, Owner } from '../domain/owner';
 import { OwnerRepository } from '../domain/owner.repository';
 
-export interface CrearOwner {
+export interface CreateOwner {
   name: string;
   lastName: string;
   documentNumber: string;
@@ -16,7 +16,7 @@ export interface CrearOwner {
 export class OwnersService {
   constructor(@Inject('OwnerRepository') private readonly repository: OwnerRepository) {}
 
-  async create(input: CrearOwner): Promise<OwnerData> {
+  async create(input: CreateOwner): Promise<OwnerData> {
     const documentNumber = input.documentNumber.trim();
     const email = input.email.trim().toLowerCase();
     await this.validateUniqueness(documentNumber, email);
@@ -32,7 +32,7 @@ export class OwnersService {
       createdAt: now,
       updatedAt: now,
     });
-    return this.repository.save(owner.obtenerDatos());
+    return this.repository.save(owner.toData());
   }
 
   async list(): Promise<OwnerData[]> {
@@ -45,22 +45,22 @@ export class OwnersService {
     return owner;
   }
 
-  async update(id: string, input: Partial<CrearOwner>): Promise<OwnerData> {
-    const actual = await this.getById(id);
-    const documentNumber = input.documentNumber?.trim() ?? actual.documentNumber;
-    const email = input.email?.trim().toLowerCase() ?? actual.email;
+  async update(id: string, input: Partial<CreateOwner>): Promise<OwnerData> {
+    const current = await this.getById(id);
+    const documentNumber = input.documentNumber?.trim() ?? current.documentNumber;
+    const email = input.email?.trim().toLowerCase() ?? current.email;
     await this.validateUniqueness(documentNumber, email, id);
-    const actualizado = Owner.create({
-      ...actual,
-      name: input.name?.trim() ?? actual.name,
-      lastName: input.lastName?.trim() ?? actual.lastName,
+    const currentizado = Owner.create({
+      ...current,
+      name: input.name?.trim() ?? current.name,
+      lastName: input.lastName?.trim() ?? current.lastName,
       documentNumber,
       email,
-      phone: input.phone?.trim() ?? actual.phone,
-      address: input.address === undefined ? actual.address : input.address.trim() || null,
+      phone: input.phone?.trim() ?? current.phone,
+      address: input.address === undefined ? current.address : input.address.trim() || null,
       updatedAt: new Date(),
-    }).obtenerDatos();
-    return this.repository.save(actualizado);
+    }).toData();
+    return this.repository.save(currentizado);
   }
 
   async delete(id: string): Promise<void> {
@@ -68,11 +68,11 @@ export class OwnersService {
     await this.repository.delete(id);
   }
 
-  private async validateUniqueness(documentNumber: string, email: string, excluirId?: string): Promise<void> {
-    if (await this.repository.existsByDocumentNumber(documentNumber, excluirId)) {
+  private async validateUniqueness(documentNumber: string, email: string, excludedId?: string): Promise<void> {
+    if (await this.repository.existsByDocumentNumber(documentNumber, excludedId)) {
       throw new ConflictException('Ya existe un owner con ese documentNumber');
     }
-    if (await this.repository.existsByEmail(email, excluirId)) {
+    if (await this.repository.existsByEmail(email, excludedId)) {
       throw new ConflictException('Ya existe un owner con ese email');
     }
   }

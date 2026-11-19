@@ -15,13 +15,13 @@ export class MedicalRecordOrm {
   pet!: PetOrm;
 
   @Column({ name: 'veterinarian_name', type: 'varchar', length: 160 })
-  nombreVeterinario!: string;
+  veterinarianName!: string;
 
   @Column({ name: 'reason', type: 'varchar', length: 500 })
-  motivoConsulta!: string;
+  reason!: string;
 
   @Column({ name: 'symptoms', type: 'text' })
-  sintomas!: string;
+  symptoms!: string;
 
   @Column({ name: 'diagnosis', type: 'text' })
   diagnosis!: string;

@@ -5,6 +5,6 @@ export interface OwnerRepository {
   findById(id: string): Promise<OwnerData | null>;
   list(): Promise<OwnerData[]>;
   delete(id: string): Promise<boolean>;
-  existsByDocumentNumber(documentNumber: string, excluirId?: string): Promise<boolean>;
-  existsByEmail(email: string, excluirId?: string): Promise<boolean>;
+  existsByDocumentNumber(documentNumber: string, excludedId?: string): Promise<boolean>;
+  existsByEmail(email: string, excludedId?: string): Promise<boolean>;
 }

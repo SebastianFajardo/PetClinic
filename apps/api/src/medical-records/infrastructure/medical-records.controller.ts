@@ -1,25 +1,25 @@
-import { Roles } from '../../autenticacion/infrastructure/roles.decorator';
+import { Roles } from '../../authentication/infrastructure/roles.decorator';
 import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { IsDateString, IsOptional, IsString, IsUUID, MaxLength, MinLength } from 'class-validator';
-import { CrearMedicalRecord, MedicalRecordsService } from '../application/medical-records.service';
+import { CreateMedicalRecord, MedicalRecordsService } from '../application/medical-records.service';
 
-class CrearMedicalRecordDto implements CrearMedicalRecord {
+class CreateMedicalRecordDto implements CreateMedicalRecord {
   @IsUUID()
   petId!: string;
 
   @IsString()
   @MinLength(2)
   @MaxLength(160)
-  nombreVeterinario!: string;
+  veterinarianName!: string;
 
   @IsString()
   @MinLength(2)
   @MaxLength(500)
-  motivoConsulta!: string;
+  reason!: string;
 
   @IsString()
   @MinLength(2)
-  sintomas!: string;
+  symptoms!: string;
 
   @IsString()
   @MinLength(2)
@@ -44,7 +44,7 @@ export class MedicalRecordsController {
   constructor(private readonly service: MedicalRecordsService) {}
 
   @Post()
-  create(@Body() input: CrearMedicalRecordDto) {
+  create(@Body() input: CreateMedicalRecordDto) {
     return this.service.create(input);
   }
 
