@@ -201,7 +201,7 @@ function Dashboard({ user, onLogout }: { user: AuthUser; onLogout: () => void })
 
         {requestState === 'ready' && section === 'inventory' && ['admin', 'veterinarian', 'assistant'].includes(user.role) && <InventoryPage />}
 
-        {requestState === 'ready' && section === 'reports' && ['admin', 'veterinarian'].includes(user.role) && <ReportsPage />
+        {requestState === 'ready' && section === 'reports' && ['admin', 'veterinarian'].includes(user.role) && <ReportsPage />}
 
         {requestState === 'ready' && section === 'pets' && (
           <section className="content-card">
