@@ -53,6 +53,33 @@ export class AppointmentsService {
     return appointment;
   }
 
+  async update(id: string, input: Partial<CreateAppointment>): Promise<AppointmentData> {
+    const current = await this.getById(id);
+    if (!['scheduled', 'confirmed'].includes(current.status)) {
+      throw new ConflictException('Only scheduled or confirmed appointments can be edited');
+    }
+    const petId = input.petId ?? current.petId;
+    const dateTime = input.dateTime ? new Date(input.dateTime) : current.dateTime;
+    const durationMinutes = input.durationMinutes ?? current.durationMinutes;
+    const reason = input.reason === undefined ? current.reason : input.reason.trim();
+    const notes = input.notes === undefined ? current.notes : input.notes.trim() || null;
+    await this.validatePet(petId);
+    await this.validateAvailability(petId, dateTime, durationMinutes, id);
+    if (!reason) throw new ConflictException('The appointment reason is required');
+    if (!Number.isInteger(durationMinutes) || durationMinutes < 15 || durationMinutes > 240) {
+      throw new ConflictException('Duration must be between 15 and 240 minutes');
+    }
+    return this.repository.save({
+      ...current,
+      petId,
+      dateTime,
+      durationMinutes,
+      reason,
+      notes,
+      updatedAt: new Date(),
+    });
+  }
+
   async updateStatus(id: string, status: AppointmentStatus): Promise<AppointmentData> {
     const current = await this.getById(id);
     const transitions: Record<AppointmentStatus, AppointmentStatus[]> = {
