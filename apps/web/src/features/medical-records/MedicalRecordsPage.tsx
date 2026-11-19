@@ -40,7 +40,7 @@ export function MedicalRecordsPage({ pets }: { pets: Pet[] }) {
     }
   }
 
-  const petNames = new Map(pets.map(pet => [pet.id, pet.nombre]));
+  const petNames = new Map(pets.map(pet => [pet.id, pet.name]));
 
   return (
     <section className="content-card">
@@ -51,7 +51,7 @@ export function MedicalRecordsPage({ pets }: { pets: Pet[] }) {
       {error && <div className="error-banner" role="alert">{error}</div>}
       {pets.length === 0 && <p className="info-banner">Registra primero una mascota para crear su historia clínica.</p>}
       {showForm && <form className="data-form" onSubmit={createRecord}>
-        <label>Mascota<select name="petId" required>{pets.map(pet => <option key={pet.id} value={pet.id}>{pet.nombre}</option>)}</select></label>
+        <label>Mascota<select name="petId" required>{pets.map(pet => <option key={pet.id} value={pet.id}>{pet.name}</option>)}</select></label>
         <label>Veterinario<input name="veterinarian" required maxLength={160} /></label>
         <label className="full-field">Motivo de consulta<input name="reason" required maxLength={500} /></label>
         <label className="full-field">Síntomas<textarea name="symptoms" rows={2} required /></label>

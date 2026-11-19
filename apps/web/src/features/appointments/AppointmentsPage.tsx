@@ -55,7 +55,7 @@ export function AppointmentsPage({ pets }: { pets: Pet[] }) {
     }
   }
 
-  const petNames = new Map(pets.map(pet => [pet.id, pet.nombre]));
+  const petNames = new Map(pets.map(pet => [pet.id, pet.name]));
 
   return (
     <section className="content-card">
@@ -66,7 +66,7 @@ export function AppointmentsPage({ pets }: { pets: Pet[] }) {
       {error && <div className="error-banner" role="alert">{error}</div>}
       {pets.length === 0 && <p className="info-banner">Registra primero una mascota para programar una cita.</p>}
       {showForm && <form className="data-form" onSubmit={createAppointment}>
-        <label>Mascota<select name="petId" required>{pets.map(pet => <option key={pet.id} value={pet.id}>{pet.nombre}</option>)}</select></label>
+        <label>Mascota<select name="petId" required>{pets.map(pet => <option key={pet.id} value={pet.id}>{pet.name}</option>)}</select></label>
         <label>Fecha y hora<input name="scheduledAt" type="datetime-local" required /></label>
         <label>Duración (minutos)<input name="duration" type="number" min="15" max="240" step="15" defaultValue="30" required /></label>
         <label>Motivo<input name="reason" required maxLength={500} /></label>

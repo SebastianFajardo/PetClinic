@@ -8,7 +8,7 @@ import { api, sessionStorage, type AuthSession, type AuthUser } from './services
 type Section = 'overview' | 'owners' | 'pets' | 'appointments' | 'medical-records';
 type RequestState = 'loading' | 'ready' | 'error';
 
-const speciesLabels: Record<Pet['especie'], string> = {
+const speciesLabels: Record<Pet['species'], string> = {
   dog: 'Perro',
   cat: 'Gato',
   bird: 'Ave',
@@ -54,12 +54,12 @@ function Dashboard({ user, onLogout }: { user: AuthUser; onLogout: () => void })
     const form = new FormData(event.currentTarget);
     try {
       await api.owners.create({
-        nombre: String(form.get('firstName')),
-        apellido: String(form.get('lastName')),
-        documento: String(form.get('document')),
-        correo: String(form.get('email')),
-        telefono: String(form.get('phone')),
-        direccion: String(form.get('address')),
+        name: String(form.get('firstName')),
+        lastName: String(form.get('lastName')),
+        documentNumber: String(form.get('document')),
+        email: String(form.get('email')),
+        phone: String(form.get('phone')),
+        address: String(form.get('address')),
       });
       setShowOwnerForm(false);
       await loadData();
@@ -74,15 +74,15 @@ function Dashboard({ user, onLogout }: { user: AuthUser; onLogout: () => void })
     const weight = String(form.get('weight'));
     try {
       await api.pets.create({
-        propietarioId: String(form.get('ownerId')),
-        nombre: String(form.get('name')),
-        especie: String(form.get('species')) as Pet['especie'],
-        raza: String(form.get('breed')),
-        fechaNacimiento: String(form.get('birthDate')) || undefined,
-        sexo: String(form.get('sex')) as Pet['sexo'],
+        ownerId: String(form.get('ownerId')),
+        name: String(form.get('name')),
+        especie: String(form.get('species')) as Pet['species'],
+        breed: String(form.get('breed')),
+        birthDate: String(form.get('birthDate')) || undefined,
+        sex: String(form.get('sex')) as Pet['sex'],
         color: String(form.get('color')),
-        pesoKg: weight ? Number(weight) : undefined,
-        notas: String(form.get('notes')),
+        weightKg: weight ? Number(weight) : undefined,
+        notes: String(form.get('notes')),
       });
       setShowPetForm(false);
       await loadData();
@@ -176,7 +176,7 @@ function Dashboard({ user, onLogout }: { user: AuthUser; onLogout: () => void })
               <div className="form-actions"><button className="primary-button" type="submit">Guardar propietario</button><button className="secondary-button" type="button" onClick={() => setShowOwnerForm(false)}>Cancelar</button></div>
             </form>}
             <div className="table-wrap"><table><thead><tr><th>Propietario</th><th>Documento</th><th>Correo</th><th>Teléfono</th></tr></thead><tbody>
-              {owners.map(owner => <tr key={owner.id}><td><strong>{owner.nombre} {owner.apellido}</strong></td><td>{owner.documento}</td><td>{owner.correo}</td><td>{owner.telefono}</td></tr>)}
+              {owners.map(owner => <tr key={owner.id}><td><strong>{owner.name} {owner.lastName}</strong></td><td>{owner.documentNumber}</td><td>{owner.email}</td><td>{owner.phone}</td></tr>)}
             </tbody></table>{owners.length === 0 && <p className="table-empty">Todavía no hay propietarios registrados.</p>}</div>
           </section>
         )}
@@ -190,7 +190,7 @@ function Dashboard({ user, onLogout }: { user: AuthUser; onLogout: () => void })
             <div className="section-heading"><div><h2>Pacientes</h2><p>{pets.length} mascotas registradas</p></div><button className="primary-button" onClick={() => setShowPetForm(!showPetForm)} disabled={owners.length === 0}>+ Nueva mascota</button></div>
             {owners.length === 0 && <p className="info-banner">Registra primero un propietario para poder asociar una mascota.</p>}
             {showPetForm && <form className="data-form" onSubmit={createPet}>
-              <label>Propietario<select name="ownerId" required>{owners.map(owner => <option key={owner.id} value={owner.id}>{owner.nombre} {owner.apellido}</option>)}</select></label>
+              <label>Propietario<select name="ownerId" required>{owners.map(owner => <option key={owner.id} value={owner.id}>{owner.name} {owner.lastName}</option>)}</select></label>
               <label>Nombre<input name="name" required maxLength={120} /></label>
               <label>Especie<select name="species"><option value="dog">Perro</option><option value="cat">Gato</option><option value="bird">Ave</option><option value="other">Otro</option></select></label>
               <label>Raza<input name="breed" /></label>
@@ -213,7 +213,7 @@ function PetTable({ pets, owners }: { pets: Pet[]; owners: Owner[] }) {
   const ownerNames = new Map(owners.map(owner => [owner.id, `${owner.nombre} ${owner.apellido}`]));
   return (
     <div className="table-wrap"><table><thead><tr><th>Mascota</th><th>Especie</th><th>Raza</th><th>Propietario</th><th>Peso</th></tr></thead><tbody>
-      {pets.map(pet => <tr key={pet.id}><td><strong>{pet.nombre}</strong></td><td>{speciesLabels[pet.especie]}</td><td>{pet.raza ?? '—'}</td><td>{ownerNames.get(pet.propietarioId) ?? '—'}</td><td>{pet.pesoKg ? `${pet.pesoKg} kg` : '—'}</td></tr>)}
+      {pets.map(pet => <tr key={pet.id}><td><strong>{pet.name}</strong></td><td>{speciesLabels[pet.species]}</td><td>{pet.breed ?? '—'}</td><td>{ownerNames.get(pet.ownerId) ?? '—'}</td><td>{pet.weightKg ? `${pet.weightKg} kg` : '—'}</td></tr>)}
     </tbody></table>{pets.length === 0 && <p className="table-empty">Todavía no hay mascotas registradas.</p>}</div>
   );
 }

@@ -1,49 +1,49 @@
 export interface Owner {
   id: string;
-  nombre: string;
-  apellido: string;
-  documento: string;
-  correo: string;
-  telefono: string;
-  direccion: string | null;
-  creadoEn: string;
-  actualizadoEn: string;
+  name: string;
+  lastName: string;
+  documentNumber: string;
+  email: string;
+  phone: string;
+  address: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Pet {
   id: string;
-  propietarioId: string;
-  nombre: string;
-  especie: 'dog' | 'cat' | 'bird' | 'other';
-  raza: string | null;
-  fechaNacimiento: string | null;
-  sexo: 'male' | 'female' | 'unknown';
+  ownerId: string;
+  name: string;
+  species: 'dog' | 'cat' | 'bird' | 'other';
+  breed: string | null;
+  birthDate: string | null;
+  sex: 'male' | 'female' | 'unknown';
   color: string | null;
-  pesoKg: number | null;
-  notas: string | null;
-  creadoEn: string;
-  actualizadoEn: string;
+  weightKg: number | null;
+  notes: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface OwnerInput {
-  nombre: string;
-  apellido: string;
-  documento: string;
-  correo: string;
-  telefono: string;
-  direccion?: string;
+  name: string;
+  lastName: string;
+  documentNumber: string;
+  email: string;
+  phone: string;
+  address?: string;
 }
 
 export interface PetInput {
-  propietarioId: string;
-  nombre: string;
-  especie: Pet['especie'];
-  raza?: string;
-  fechaNacimiento?: string;
-  sexo: Pet['sexo'];
+  ownerId: string;
+  name: string;
+  species: Pet['species'];
+  breed?: string;
+  birthDate?: string;
+  sex: Pet['sex'];
   color?: string;
-  pesoKg?: number;
-  notas?: string;
+  weightKg?: number;
+  notes?: string;
 }
 
 export interface Appointment {
