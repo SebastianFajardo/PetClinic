@@ -26,7 +26,7 @@ export class AuthenticationService {
       name: input.name.trim(),
       email,
       passwordHash: await hash(input.password, 12),
-      rolee: 'assistant',
+      role: 'assistant',
       isActive: true,
       createdAt: now,
       updatedAt: now,
@@ -48,7 +48,7 @@ export class AuthenticationService {
       sub: identity.id,
       email: identity.email,
       name: identity.name,
-      rolee: identity.rolee,
+      role: identity.role,
     });
     return { accessToken, user: identity };
   }

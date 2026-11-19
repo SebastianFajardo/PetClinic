@@ -22,14 +22,13 @@ export class AppointmentsService {
   async create(input: CreateAppointment): Promise<AppointmentData> {
     await this.validatePet(input.petId);
     const dateTime = new Date(input.dateTime);
-    const duration = input.durationMinutes;
-    await this.validateAvailability(input.petId, dateTime, duration);
+    await this.validateAvailability(input.petId, dateTime, input.durationMinutes);
     const now = new Date();
     const appointment = Appointment.create({
       id: randomUUID(),
       petId: input.petId,
       dateTime,
-      durationMinutes: duration,
+      durationMinutes: input.durationMinutes,
       reason: input.reason.trim(),
       status: 'scheduled',
       notes: input.notes?.trim() || null,
@@ -71,7 +70,7 @@ export class AppointmentsService {
 
   private async validatePet(petId: string): Promise<void> {
     if (!(await this.pets.findById(petId))) {
-      throw new NotFoundException('No se encontró la pet asociada');
+      throw new NotFoundException('Pet was not found');
     }
   }
 
@@ -79,7 +78,7 @@ export class AppointmentsService {
     if (Number.isNaN(start.getTime())) throw new ConflictException('The appointment date is invalid');
     const end = new Date(start.getTime() + durationMinutes * 60_000);
     if (await this.repository.hasOverlap(petId, start, end, excludedId)) {
-      throw new ConflictException('The pet ya tiene una appointment en ese horario');
+      throw new ConflictException('The pet already has an appointment scheduled for that time');
     }
   }
 }

@@ -1,7 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import { OwnerRepository } from '../../owners/domain/owner.repository';
-import { PetData, PetSpecies, Pet, PetSex } from '../domain/pet';
+import { Pet, PetData, PetSex, PetSpecies } from '../domain/pet';
 import { PetRepository } from '../domain/pet.repository';
 
 export interface CreatePet {
@@ -25,7 +25,7 @@ export class PetsService {
 
   async create(input: CreatePet): Promise<PetData> {
     const owner = await this.owners.findById(input.ownerId);
-    if (!owner) throw new NotFoundException('Owner was not found asociado');
+    if (!owner) throw new NotFoundException('The associated owner was not found');
     const now = new Date();
     const pet = Pet.create({
       id: randomUUID(),
@@ -60,23 +60,23 @@ export class PetsService {
   }
 
   async update(id: string, input: Partial<CreatePet>): Promise<PetData> {
-    const actual = await this.getById(id);
-    const ownerId = input.ownerId ?? actual.ownerId;
+    const current = await this.getById(id);
+    const ownerId = input.ownerId ?? current.ownerId;
     if (input.ownerId) {
       const owner = await this.owners.findById(ownerId);
-      if (!owner) throw new NotFoundException('Owner was not found asociado');
+      if (!owner) throw new NotFoundException('The associated owner was not found');
     }
     return this.repository.save(Pet.create({
-      ...actual,
+      ...current,
       ownerId,
-      name: input.name?.trim() ?? actual.name,
-      species: input.species ?? actual.species,
-      breed: input.breed === undefined ? actual.breed : input.breed.trim() || null,
-      birthDate: input.birthDate ?? actual.birthDate,
-      sex: input.sex ?? actual.sex,
-      color: input.color === undefined ? actual.color : input.color.trim() || null,
-      weightKg: input.weightKg ?? actual.weightKg,
-      notes: input.notes === undefined ? actual.notes : input.notes.trim() || null,
+      name: input.name?.trim() ?? current.name,
+      species: input.species ?? current.species,
+      breed: input.breed === undefined ? current.breed : input.breed.trim() || null,
+      birthDate: input.birthDate ?? current.birthDate,
+      sex: input.sex ?? current.sex,
+      color: input.color === undefined ? current.color : input.color.trim() || null,
+      weightKg: input.weightKg ?? current.weightKg,
+      notes: input.notes === undefined ? current.notes : input.notes.trim() || null,
       updatedAt: new Date(),
     }).toData());
   }

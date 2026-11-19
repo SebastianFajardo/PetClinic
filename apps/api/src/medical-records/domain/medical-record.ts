@@ -17,7 +17,7 @@ export class MedicalRecord {
   private constructor(private readonly data: MedicalRecordData) {}
 
   static create(data: MedicalRecordData): MedicalRecord {
-    if (!data.petId.trim()) throw new BusinessRuleError('Pet is required');
+    if (!data.petId.trim()) throw new BusinessRuleError('A pet is required');
     if (!data.veterinarianName.trim()) throw new BusinessRuleError('Veterinarian name is required');
     if (!data.reason.trim()) throw new BusinessRuleError('Consultation reason is required');
     if (!data.symptoms.trim()) throw new BusinessRuleError('Symptoms are required');

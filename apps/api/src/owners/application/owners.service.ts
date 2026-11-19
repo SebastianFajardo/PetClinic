@@ -1,6 +1,6 @@
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
-import { OwnerData, Owner } from '../domain/owner';
+import { Owner, OwnerData } from '../domain/owner';
 import { OwnerRepository } from '../domain/owner.repository';
 
 export interface CreateOwner {
@@ -50,7 +50,7 @@ export class OwnersService {
     const documentNumber = input.documentNumber?.trim() ?? current.documentNumber;
     const email = input.email?.trim().toLowerCase() ?? current.email;
     await this.validateUniqueness(documentNumber, email, id);
-    const currentizado = Owner.create({
+    const updatedOwner = Owner.create({
       ...current,
       name: input.name?.trim() ?? current.name,
       lastName: input.lastName?.trim() ?? current.lastName,
@@ -60,7 +60,7 @@ export class OwnersService {
       address: input.address === undefined ? current.address : input.address.trim() || null,
       updatedAt: new Date(),
     }).toData();
-    return this.repository.save(currentizado);
+    return this.repository.save(updatedOwner);
   }
 
   async delete(id: string): Promise<void> {

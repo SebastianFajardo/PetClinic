@@ -19,15 +19,11 @@ export class Owner {
     if (!data.name.trim() || !data.lastName.trim()) {
       throw new BusinessRuleError('First and last names are required');
     }
-    if (!data.documentNumber.trim()) {
-      throw new BusinessRuleError('Document number is required');
-    }
+    if (!data.documentNumber.trim()) throw new BusinessRuleError('Document number is required');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
       throw new BusinessRuleError('Invalid email address');
     }
-    if (!data.phone.trim()) {
-      throw new BusinessRuleError('Phone number is required');
-    }
+    if (!data.phone.trim()) throw new BusinessRuleError('Phone number is required');
     return new Owner(data);
   }
 
