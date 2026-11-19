@@ -12,6 +12,7 @@ import { MedicalRecordsModule } from './medical-records/medical-records.module';
 import { PetsModule } from './pets/pets.module';
 import { OwnersModule } from './owners/owners.module';
 import { TreatmentsModule } from './treatments/treatments.module';
+import { InventoryModule } from './inventory/inventory.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { TreatmentsModule } from './treatments/treatments.module';
     MedicalRecordsModule,
     AppointmentsModule,
     TreatmentsModule,
+    InventoryModule,
   ],
   controllers: [HealthController],
   providers: [
