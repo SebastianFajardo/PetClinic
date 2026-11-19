@@ -25,7 +25,7 @@ export class PetsService {
 
   async create(input: CreatePet): Promise<PetData> {
     const owner = await this.owners.findById(input.ownerId);
-    if (!owner) throw new NotFoundException('No se encontró el owner asociado');
+    if (!owner) throw new NotFoundException('Owner was not found asociado');
     const now = new Date();
     const pet = Pet.create({
       id: randomUUID(),
@@ -47,15 +47,15 @@ export class PetsService {
   async list(ownerId?: string): Promise<PetData[]> {
     if (ownerId) {
       const owner = await this.owners.findById(ownerId);
-      if (!owner) throw new NotFoundException('No se encontró el owner');
-      return this.repository.listarPorOwner(ownerId);
+      if (!owner) throw new NotFoundException('Owner was not found');
+      return this.repository.listByOwner(ownerId);
     }
     return this.repository.list();
   }
 
   async getById(id: string): Promise<PetData> {
     const pet = await this.repository.findById(id);
-    if (!pet) throw new NotFoundException('No se encontró la pet');
+    if (!pet) throw new NotFoundException('Pet was not found');
     return pet;
   }
 
@@ -64,7 +64,7 @@ export class PetsService {
     const ownerId = input.ownerId ?? actual.ownerId;
     if (input.ownerId) {
       const owner = await this.owners.findById(ownerId);
-      if (!owner) throw new NotFoundException('No se encontró el owner asociado');
+      if (!owner) throw new NotFoundException('Owner was not found asociado');
     }
     return this.repository.save(Pet.create({
       ...actual,

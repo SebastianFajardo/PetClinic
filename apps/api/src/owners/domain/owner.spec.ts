@@ -1,7 +1,7 @@
 import { Owner } from './owner';
 
 describe('Owner', () => {
-  const datos = {
+  const data = {
     id: 'a66bdfad-0b10-4b4c-8d61-8c9acddab2c1',
     name: 'Laura',
     lastName: 'Gómez',
@@ -14,14 +14,14 @@ describe('Owner', () => {
   };
 
   it('creates an owner with valid data', () => {
-    expect(Owner.create(datos).toData()).toEqual(datos);
+    expect(Owner.create(data).toData()).toEqual(data);
   });
 
   it('rejects an invalid email address', () => {
-    expect(() => Owner.create({ ...datos, email: 'invalid-email' })).toThrow('El email electrónico no es válido');
+    expect(() => Owner.create({ ...data, email: 'invalid-email' })).toThrow('El email electrónico no es válido');
   });
 
   it('rejects a missing document number', () => {
-    expect(() => Owner.create({ ...datos, documentNumber: ' ' })).toThrow('El documentNumber es obligatorio');
+    expect(() => Owner.create({ ...data, documentNumber: ' ' })).toThrow('El documentNumber es obligatorio');
   });
 });

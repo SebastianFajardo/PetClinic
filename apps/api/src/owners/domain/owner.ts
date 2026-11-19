@@ -13,25 +13,25 @@ export interface OwnerData {
 }
 
 export class Owner {
-  private constructor(private readonly datos: OwnerData) {}
+  private constructor(private readonly data: OwnerData) {}
 
-  static create(datos: OwnerData): Owner {
-    if (!datos.name.trim() || !datos.lastName.trim()) {
+  static create(data: OwnerData): Owner {
+    if (!data.name.trim() || !data.lastName.trim()) {
       throw new ReglaNegocioError('El name y el lastName son obligatorios');
     }
-    if (!datos.documentNumber.trim()) {
+    if (!data.documentNumber.trim()) {
       throw new ReglaNegocioError('El documentNumber es obligatorio');
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(datos.email)) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
       throw new ReglaNegocioError('El email electrónico no es válido');
     }
-    if (!datos.phone.trim()) {
+    if (!data.phone.trim()) {
       throw new ReglaNegocioError('El teléfono es obligatorio');
     }
-    return new Owner(datos);
+    return new Owner(data);
   }
 
   toData(): OwnerData {
-    return { ...this.datos };
+    return { ...this.data };
   }
 }

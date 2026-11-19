@@ -9,8 +9,8 @@ import { OwnerOrm } from './owner.orm-entity';
 export class OwnerTypeOrmRepository implements OwnerRepository {
   constructor(@InjectRepository(OwnerOrm) private readonly repository: Repository<OwnerOrm>) {}
 
-  async save(datos: OwnerData): Promise<OwnerData> {
-    const entidad = this.repository.create(datos);
+  async save(data: OwnerData): Promise<OwnerData> {
+    const entidad = this.repository.create(data);
     return this.repository.save(entidad);
   }
 
