@@ -3,6 +3,8 @@ import { api } from './services/api';
 import { AppointmentsPage } from './features/appointments/AppointmentsPage';
 import { MedicalRecordsPage } from './features/medical-records/MedicalRecordsPage';
 import type { Owner, Pet } from './types';
+import { AuthPage } from './features/auth/AuthPage';
+import { api, sessionStorage, type AuthSession, type AuthUser } from './services/api';
 
 type Section = 'overview' | 'owners' | 'pets' | 'appointments' | 'medical-records';
 type RequestState = 'loading' | 'ready' | 'error';
@@ -14,7 +16,7 @@ const speciesLabels: Record<Pet['especie'], string> = {
   other: 'Otro',
 };
 
-export default function App() {
+function Dashboard({ user, onLogout }: { user: AuthUser; onLogout: () => void }) {
   const [section, setSection] = useState<Section>('overview');
   const [owners, setOwners] = useState<Owner[]>([]);
   const [pets, setPets] = useState<Pet[]>([]);
@@ -111,9 +113,9 @@ export default function App() {
           <button className={section === 'appointments' ? 'nav-item active' : 'nav-item'} onClick={() => setSection('appointments')}>
             <span>▦</span> Citas
           </button>
-          <button className={section === 'medical-records' ? 'nav-item active' : 'nav-item'} onClick={() => setSection('medical-records')}>
+          {['admin', 'veterinarian'].includes(user.rol) && <button className={section === 'medical-records' ? 'nav-item active' : 'nav-item'} onClick={() => setSection('medical-records')}>
             <span>＋</span> Historias clínicas
-          </button>
+          </button>}
         </nav>
         <div className="sidebar-footer">
           <span className={apiConnected ? 'connection-dot online' : 'connection-dot'} />
@@ -127,7 +129,7 @@ export default function App() {
             <span className="eyebrow">PLATAFORMA DE GESTIÓN VETERINARIA</span>
             <h1>{section === 'overview' ? 'Resumen general' : section === 'owners' ? 'Propietarios' : section === 'pets' ? 'Mascotas' : section === 'appointments' ? 'Citas' : 'Historias clínicas'}</h1>
           </div>
-          <button className="refresh-button" onClick={() => void loadData()} aria-label="Actualizar información">↻</button>
+          <div className="account-actions"><div className="account-identity"><strong>{user.nombre}</strong><span>{user.rol}</span></div><button className="secondary-button" onClick={onLogout}>Cerrar sesión</button><button className="refresh-button" onClick={() => void loadData()} aria-label="Actualizar información">↻</button></div>
         </header>
 
         {error && <div className="error-banner" role="alert">{error}</div>}
@@ -182,7 +184,7 @@ export default function App() {
 
         {requestState === 'ready' && section === 'appointments' && <AppointmentsPage pets={pets} />}
 
-        {requestState === 'ready' && section === 'medical-records' && <MedicalRecordsPage pets={pets} />}
+        {requestState === 'ready' && section === 'medical-records' && ['admin', 'veterinarian'].includes(user.rol) && <MedicalRecordsPage pets={pets} />}
 
         {requestState === 'ready' && section === 'pets' && (
           <section className="content-card">
@@ -215,4 +217,47 @@ function PetTable({ pets, owners }: { pets: Pet[]; owners: Owner[] }) {
       {pets.map(pet => <tr key={pet.id}><td><strong>{pet.nombre}</strong></td><td>{speciesLabels[pet.especie]}</td><td>{pet.raza ?? '—'}</td><td>{ownerNames.get(pet.propietarioId) ?? '—'}</td><td>{pet.pesoKg ? `${pet.pesoKg} kg` : '—'}</td></tr>)}
     </tbody></table>{pets.length === 0 && <p className="table-empty">Todavía no hay mascotas registradas.</p>}</div>
   );
+}
+
+
+export default function App() {
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [checkingSession, setCheckingSession] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    async function restoreSession() {
+      if (!sessionStorage.getToken()) {
+        setCheckingSession(false);
+        return;
+      }
+      try {
+        const currentUser = await api.auth.me();
+        if (active) setUser(currentUser);
+      } catch {
+        sessionStorage.clear();
+        if (active) setUser(null);
+      } finally {
+        if (active) setCheckingSession(false);
+      }
+    }
+    void restoreSession();
+    return () => { active = false; };
+  }, []);
+
+  function handleAuthenticated(session: AuthSession) {
+    setUser(session.user);
+  }
+
+  function handleLogout() {
+    sessionStorage.clear();
+    setUser(null);
+  }
+
+  if (checkingSession) {
+    return <main className="auth-screen"><div className="loading-state">Verificando sesión...</div></main>;
+  }
+
+  if (!user) return <AuthPage onAuthenticated={handleAuthenticated} />;
+  return <Dashboard user={user} onLogout={handleLogout} />;
 }
