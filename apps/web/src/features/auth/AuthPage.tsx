@@ -6,8 +6,8 @@ interface AuthPageProps {
 }
 
 export function AuthPage({ onAuthenticated }: AuthPageProps) {
-  const [correo, setCorreo] = useState('');
-  const [contrasena, setContrasena] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -16,7 +16,7 @@ export function AuthPage({ onAuthenticated }: AuthPageProps) {
     setLoading(true);
     setError('');
     try {
-      const session = await api.auth.login(correo, contrasena);
+      const session = await api.auth.login(email, password);
       sessionStorage.save(session);
       onAuthenticated(session);
     } catch (cause) {
@@ -34,8 +34,8 @@ export function AuthPage({ onAuthenticated }: AuthPageProps) {
         <h1>Bienvenido</h1>
         <p>Inicia sesión para acceder a la plataforma.</p>
         <form className="auth-form" onSubmit={handleSubmit}>
-          <label>Correo electrónico<input type="email" value={correo} onChange={event => setCorreo(event.target.value)} autoComplete="username" required maxLength={180} /></label>
-          <label>Contraseña<input type="password" value={contrasena} onChange={event => setContrasena(event.target.value)} autoComplete="current-password" required maxLength={72} /></label>
+          <label>Correo electrónico<input type="email" value={email} onChange={event => setEmail(event.target.value)} autoComplete="username" required maxLength={180} /></label>
+          <label>Contraseña<input type="password" value={password} onChange={event => setPassword(event.target.value)} autoComplete="current-password" required maxLength={72} /></label>
           {error && <div className="error-banner" role="alert">{error}</div>}
           <button className="primary-button" type="submit" disabled={loading}>{loading ? 'Ingresando...' : 'Iniciar sesión'}</button>
         </form>

@@ -5,9 +5,9 @@ const tokenKey = 'petclinic_access_token';
 
 export interface AuthUser {
   id: string;
-  nombre: string;
-  correo: string;
-  rol: 'admin' | 'veterinarian' | 'assistant' | 'receptionist';
+  name: string;
+  email: string;
+  role: 'admin' | 'veterinarian' | 'assistant' | 'receptionist';
 }
 
 export interface AuthSession {
@@ -46,10 +46,10 @@ async function request<T>(path: string, options?: RequestInit, authenticated = t
 export const api = {
   health: () => request<{ status: string }>('/health', undefined, false),
   auth: {
-    login: (correo: string, contrasena: string) =>
-      request<AuthSession>('/auth/login', { method: 'POST', body: JSON.stringify({ correo, contrasena }) }, false),
-    register: (nombre: string, correo: string, contrasena: string) =>
-      request<AuthSession>('/auth/register', { method: 'POST', body: JSON.stringify({ nombre, correo, contrasena }) }, false),
+    login: (email: string, password: string) =>
+      request<AuthSession>('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) }, false),
+    register: (name: string, email: string, password: string) =>
+      request<AuthSession>('/auth/register', { method: 'POST', body: JSON.stringify({ name, email, password }) }, false),
     me: () => request<AuthUser>('/auth/me'),
   },
   owners: {
