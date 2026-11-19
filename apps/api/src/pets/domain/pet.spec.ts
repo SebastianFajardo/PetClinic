@@ -10,17 +10,17 @@ describe('Pet', () => {
     birthDate: null,
     sex: 'female' as const,
     color: 'Blanco',
-    pesoKg: 4.2,
+    weightKg: 4.2,
     notes: null,
     createdAt: new Date('2026-01-01T00:00:00.000Z'),
     updatedAt: new Date('2026-01-01T00:00:00.000Z'),
   };
 
   it('creates a pet with valid data', () => {
-    expect(Pet.create(datos).obtenerDatos()).toEqual(datos);
+    expect(Pet.create(datos).toData()).toEqual(datos);
   });
 
   it('rejects a non-positive weight', () => {
-    expect(() => Pet.create({ ...datos, pesoKg: 0 })).toThrow('El weight debe ser un número mayor que cero');
+    expect(() => Pet.create({ ...datos, weightKg: 0 })).toThrow('El weight debe ser un número mayor que cero');
   });
 });

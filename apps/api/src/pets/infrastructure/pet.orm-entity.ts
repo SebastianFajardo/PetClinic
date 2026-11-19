@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn, UpdateDateColumn } from 'typeorm';
-import { OwnerOrm } from '../../propietarios/infrastructure/owner.orm-entity';
+import { OwnerOrm } from '../../owners/infrastructure/owner.orm-entity';
 
 @Entity({ name: 'pets' })
 @Index('IDX_pets_owner_id', ['ownerId'])
@@ -33,7 +33,7 @@ export class PetOrm {
   color!: string | null;
 
   @Column({ name: 'weight_kg', type: 'numeric', precision: 7, scale: 2, nullable: true })
-  pesoKg!: number | null;
+  weightKg!: number | null;
 
   @Column({ name: 'notes', type: 'text', nullable: true })
   notes!: string | null;

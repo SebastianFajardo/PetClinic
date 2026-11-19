@@ -1,9 +1,9 @@
-import { Roles } from '../../autenticacion/infrastructure/roles.decorator';
+import { Roles } from '../../authentication/infrastructure/roles.decorator';
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { IsDateString, IsIn, IsNumber, IsOptional, IsString, IsUUID, Max, MaxLength, Min, MinLength } from 'class-validator';
-import { CrearPet, PetsService } from '../application/pets.service';
+import { CreatePet, PetsService } from '../application/pets.service';
 
-class CrearPetDto implements CrearPet {
+class CreatePetDto implements CreatePet {
   @IsUUID()
   ownerId!: string;
 
@@ -37,7 +37,7 @@ class CrearPetDto implements CrearPet {
   @IsNumber()
   @Min(0.01)
   @Max(500)
-  pesoKg?: number;
+  weightKg?: number;
 
   @IsOptional()
   @IsString()
@@ -45,7 +45,7 @@ class CrearPetDto implements CrearPet {
   notes?: string;
 }
 
-class ActualizarPetDto {
+class UpdatePetDto {
   @IsOptional()
   @IsUUID()
   ownerId?: string;
@@ -82,7 +82,7 @@ class ActualizarPetDto {
   @IsNumber()
   @Min(0.01)
   @Max(500)
-  pesoKg?: number;
+  weightKg?: number;
 
   @IsOptional()
   @IsString()
@@ -96,7 +96,7 @@ export class PetsController {
   constructor(private readonly service: PetsService) {}
 
   @Post()
-  create(@Body() input: CrearPetDto) {
+  create(@Body() input: CreatePetDto) {
     return this.service.create(input);
   }
 
@@ -111,7 +111,7 @@ export class PetsController {
   }
 
   @Patch(':id')
-  update(@Param('id', ParseUUIDPipe) id: string, @Body() input: ActualizarPetDto) {
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() input: UpdatePetDto) {
     return this.service.update(id, input);
   }
 
