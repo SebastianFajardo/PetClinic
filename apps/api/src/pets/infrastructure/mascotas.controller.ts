@@ -1,16 +1,16 @@
-import { Roles } from '../../autenticacion/infraestructura/roles.decorator';
+import { Roles } from '../../autenticacion/infrastructure/roles.decorator';
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { IsDateString, IsIn, IsNumber, IsOptional, IsString, IsUUID, Max, MaxLength, Min, MinLength } from 'class-validator';
-import { CrearMascota, MascotasServicio } from '../aplicacion/mascotas.servicio';
+import { CrearPet, PetsService } from '../application/pets.service';
 
-class CrearMascotaDto implements CrearMascota {
+class CrearPetDto implements CrearPet {
   @IsUUID()
-  propietarioId!: string;
+  ownerId!: string;
 
   @IsString()
   @MinLength(1)
   @MaxLength(120)
-  nombre!: string;
+  name!: string;
 
   @IsIn(['dog', 'cat', 'bird', 'other'])
   especie!: 'dog' | 'cat' | 'bird' | 'other';
@@ -22,7 +22,7 @@ class CrearMascotaDto implements CrearMascota {
 
   @IsOptional()
   @IsDateString()
-  fechaNacimiento?: string;
+  birthDate?: string;
 
   @IsOptional()
   @IsIn(['male', 'female', 'unknown'])
@@ -45,16 +45,16 @@ class CrearMascotaDto implements CrearMascota {
   notas?: string;
 }
 
-class ActualizarMascotaDto {
+class ActualizarPetDto {
   @IsOptional()
   @IsUUID()
-  propietarioId?: string;
+  ownerId?: string;
 
   @IsOptional()
   @IsString()
   @MinLength(1)
   @MaxLength(120)
-  nombre?: string;
+  name?: string;
 
   @IsOptional()
   @IsIn(['dog', 'cat', 'bird', 'other'])
@@ -67,7 +67,7 @@ class ActualizarMascotaDto {
 
   @IsOptional()
   @IsDateString()
-  fechaNacimiento?: string;
+  birthDate?: string;
 
   @IsOptional()
   @IsIn(['male', 'female', 'unknown'])
@@ -92,31 +92,31 @@ class ActualizarMascotaDto {
 
 @Controller('pets')
 @Roles('admin', 'veterinarian', 'assistant', 'receptionist')
-export class MascotasController {
-  constructor(private readonly servicio: MascotasServicio) {}
+export class PetsController {
+  constructor(private readonly service: PetsService) {}
 
   @Post()
-  crear(@Body() entrada: CrearMascotaDto) {
-    return this.servicio.crear(entrada);
+  create(@Body() input: CrearPetDto) {
+    return this.service.create(input);
   }
 
   @Get()
-  listar(@Query('ownerId') propietarioId?: string) {
-    return this.servicio.listar(propietarioId);
+  list(@Query('ownerId') ownerId?: string) {
+    return this.service.list(ownerId);
   }
 
   @Get(':id')
-  obtener(@Param('id', ParseUUIDPipe) id: string) {
-    return this.servicio.obtener(id);
+  getById(@Param('id', ParseUUIDPipe) id: string) {
+    return this.service.getById(id);
   }
 
   @Patch(':id')
-  actualizar(@Param('id', ParseUUIDPipe) id: string, @Body() entrada: ActualizarMascotaDto) {
-    return this.servicio.actualizar(id, entrada);
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() input: ActualizarPetDto) {
+    return this.service.update(id, input);
   }
 
   @Delete(':id')
-  async eliminar(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
-    await this.servicio.eliminar(id);
+  async delete(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+    await this.service.delete(id);
   }
 }
