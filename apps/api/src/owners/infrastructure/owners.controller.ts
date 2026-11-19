@@ -1,37 +1,37 @@
 import { Roles } from '../../authentication/infrastructure/roles.decorator';
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
 import { IsEmail, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
-import { CrearOwner, OwnersService } from '../application/owners.servicio';
+import { CrearOwner, OwnersService } from '../application/owners.service';
 
 class CrearOwnerDto implements CrearOwner {
   @IsString()
   @MinLength(2)
   @MaxLength(100)
-  nombre!: string;
+  name!: string;
 
   @IsString()
   @MinLength(2)
   @MaxLength(100)
-  apellido!: string;
+  lastName!: string;
 
   @IsString()
   @MinLength(3)
   @MaxLength(30)
-  documento!: string;
+  documentNumber!: string;
 
   @IsEmail()
   @MaxLength(180)
-  correo!: string;
+  email!: string;
 
   @IsString()
   @MinLength(7)
   @MaxLength(30)
-  telefono!: string;
+  phone!: string;
 
   @IsOptional()
   @IsString()
   @MaxLength(250)
-  direccion?: string;
+  address?: string;
 }
 
 class ActualizarOwnerDto {
@@ -39,64 +39,64 @@ class ActualizarOwnerDto {
   @IsString()
   @MinLength(2)
   @MaxLength(100)
-  nombre?: string;
+  name?: string;
 
   @IsOptional()
   @IsString()
   @MinLength(2)
   @MaxLength(100)
-  apellido?: string;
+  lastName?: string;
 
   @IsOptional()
   @IsString()
   @MinLength(3)
   @MaxLength(30)
-  documento?: string;
+  documentNumber?: string;
 
   @IsOptional()
   @IsEmail()
   @MaxLength(180)
-  correo?: string;
+  email?: string;
 
   @IsOptional()
   @IsString()
   @MinLength(7)
   @MaxLength(30)
-  telefono?: string;
+  phone?: string;
 
   @IsOptional()
   @IsString()
   @MaxLength(250)
-  direccion?: string;
+  address?: string;
 }
 
 @Controller('owners')
 @Roles('admin', 'veterinarian', 'assistant', 'receptionist')
 export class OwnersController {
-  constructor(private readonly servicio: OwnersService) {}
+  constructor(private readonly service: OwnersService) {}
 
   @Post()
-  crear(@Body() entrada: CrearOwnerDto) {
-    return this.servicio.crear(entrada);
+  create(@Body() input: CrearOwnerDto) {
+    return this.service.create(input);
   }
 
   @Get()
-  listar() {
-    return this.servicio.listar();
+  list() {
+    return this.service.list();
   }
 
   @Get(':id')
-  obtener(@Param('id', ParseUUIDPipe) id: string) {
-    return this.servicio.obtener(id);
+  getById(@Param('id', ParseUUIDPipe) id: string) {
+    return this.service.getById(id);
   }
 
   @Patch(':id')
-  actualizar(@Param('id', ParseUUIDPipe) id: string, @Body() entrada: ActualizarOwnerDto) {
-    return this.servicio.actualizar(id, entrada);
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() input: ActualizarOwnerDto) {
+    return this.service.update(id, input);
   }
 
   @Delete(':id')
-  async eliminar(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
-    await this.servicio.eliminar(id);
+  async delete(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+    await this.service.delete(id);
   }
 }
